@@ -1,0 +1,11 @@
+Package: mppSim
+Type: Package
+Title: Functions for simulation in MPP
+Version: 0.1.0
+Author: Vincent Garin
+Maintainer: Vincent Garin <vincent.garin@wur.nl>
+Description: Functions for simulation in MPP
+License: GPL >= 2.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
