@@ -27,9 +27,11 @@
 #'
 #' @param par_clu parent clustering object.
 #'
-#' @return list with the simulated phenotypic values, each contribution
+#' @return List with the simulated phenotypic values, each contribution
 #' (polygenic, QTL, error), and the proportions of polygenic, QTL, error,
-#' QTL covariance, covariance between QTL and polygenic, etc.
+#' QTL covariance, covariance between QTL and polygenic, etc. And also a list
+#' of extended QTLs effect with the proportion of non-zero QTL effect
+#' contribution (~ QTL allele frequency estimation).
 #'
 #' @author Vincent Garin
 #'
@@ -58,6 +60,8 @@ SimPheno <- function(QTL, y_poly, k = 1, her, mppData, mppData_bi,
 
   Beta_list <- BetaVal(QTL = QTL, QTL_inc = QTL_inc)
 
+  n_alleles <- unlist(lapply(X = Beta_list, FUN = function(x) sum(x !=0)))
+
   # Compute the unscaled realized variance
 
   vQuS <- mapply(FUN = function(x, y) var(x %*% y), x = QTL_inc, y = Beta_list)
@@ -76,10 +80,26 @@ SimPheno <- function(QTL, y_poly, k = 1, her, mppData, mppData_bi,
 
   y_QTL_i <- mapply(FUN = function(x, y) x %*% y, x = QTL_inc, y = Beta_scaled)
 
+  # Estimate the proportion of non zero QTL contribution (~ QTL frequency)
+
+  colnames(y_QTL_i) <- paste0("Q", QTL$Qeff)
+
+  y_QTL <- round(y_QTL_i, 2)
+
+  n_0 <- apply(X = y_QTL, MARGIN = 2, FUN = function(x) {sum(x==0)})
+
+  N <- dim(y_QTL_i)[1]
+
+  fract_0 <- n_0/N
+
+  fract_n_0 <- 1- fract_0
+
+  QTL_ext <- data.frame(QTL, fract_n_0, n_alleles, stringsAsFactors = FALSE)
+
   # check the independence between simulated QTLs contributions
 
   V_mat <- cov(y_QTL_i)
-  diag(V_mat) <- rep(0, 8)
+  diag(V_mat) <- rep(0, NQTL)
 
   cov_QTL <- sum(c(V_mat))
 
@@ -139,7 +159,8 @@ SimPheno <- function(QTL, y_poly, k = 1, her, mppData, mppData_bi,
   res <- list(y_sim = y_sim, y_poly = y_poly, y_QTL = y_QTL, y_err = y_err,
               p_poly = p_poly, p_QTL = p_QTL, p_err = p_err, p_rest = p_rest,
               p_cov_Q = p_cov_Q, p_cov_Qg = p_cov_Qg, p_cov_Qe = p_cov_Qe,
-              p_cov_ge = p_cov_ge, p_Q_6 = p_Q_6, p_Q_2 = p_Q_2)
+              p_cov_ge = p_cov_ge, p_Q_6 = p_Q_6, p_Q_2 = p_Q_2,
+              QTL_ext = QTL_ext)
 
   return(res)
 

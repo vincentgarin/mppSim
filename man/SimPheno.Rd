@@ -23,9 +23,11 @@ variance (VQ = k * Vg). Default = 1.}
 \item{par_clu}{parent clustering object.}
 }
 \value{
-list with the simulated phenotypic values, each contribution
+List with the simulated phenotypic values, each contribution
 (polygenic, QTL, error), and the proportions of polygenic, QTL, error,
-QTL covariance, covariance between QTL and polygenic, etc.
+QTL covariance, covariance between QTL and polygenic, etc. And also a list
+of extended QTLs effect with the proportion of non-zero QTL effect
+contribution (~ QTL allele frequency estimation).
 }
 \description{
 Function simulating phenotypic values based on polygenic, QTL and
