@@ -122,21 +122,37 @@ SampleMPPDesign <- function(np_dia = 9, n_ind = 200, MPP_des, np_sel, N = 800){
 
   } else if (MPP_des == "Fact"){
 
-    sel_par <- sort(sample(1:np_dia, np_sel))
+    sel_par <- sample(1:np_dia, np_sel)
 
     if(np_sel %% 2 == 0){
 
-      sel_par1 <- paste0("P", sel_par[1:(np_sel/2)])
-      sel_par2 <- paste0("P", sel_par[((np_sel/2) + 1):np_sel])
+      sel_par1 <- sel_par[1:(np_sel/2)]
+      sel_par2 <- sel_par[((np_sel/2) + 1):np_sel]
 
     } else {
 
-      sel_par1 <- paste0("P", sel_par[1:floor(np_sel/2)])
-      sel_par2 <- paste0("P", sel_par[ceiling(np_sel/2):np_sel])
+      sel_par1 <- sel_par[1:floor(np_sel/2)]
+      sel_par2 <-sel_par[ceiling(np_sel/2):np_sel]
 
     }
 
-    cr_id_sel <- c(outer(X = sel_par1, Y = sel_par2, FUN = paste0))
+    cr_id_sel <- rep("", length(sel_par1) * length(sel_par2))
+
+    ind_cr_fct <- 1
+
+    for(i in 1:length(sel_par1)){
+
+      for(j in 1:length(sel_par2)){
+
+        ord_par <- sort(c(sel_par1[i], sel_par2[j]))
+
+        cr_id_sel[ind_cr_fct] <- paste0("P", ord_par[1], "P", ord_par[2])
+
+        ind_cr_fct <- ind_cr_fct + 1
+
+      }
+
+    }
 
     cr_ind_sel <- par_per_cross[cr_id %in% cr_id_sel, 1]
 
@@ -201,10 +217,10 @@ SampleMPPDesign <- function(np_dia = 9, n_ind = 200, MPP_des, np_sel, N = 800){
 
   for(i in 1:n_cr){
 
-   num_ind_i <- num_ind[cross_ind %in% cr_ind_sel[i]]
-   sel_ind_i <- sample(x = num_ind_i, size = ind_cr[i])
+    num_ind_i <- num_ind[cross_ind %in% cr_ind_sel[i]]
+    sel_ind_i <- sample(x = num_ind_i, size = ind_cr[i])
 
-   sel_ind <- c(sel_ind, sel_ind_i)
+    sel_ind <- c(sel_ind, sel_ind_i)
 
   }
 
