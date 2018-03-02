@@ -78,26 +78,25 @@ BetaVal <- function(QTL, QTL_inc){
       Beta_sign <- sample(x = c(-1, 1), size = 1, replace = TRUE)
       Beta <- c(rep(0, (na - 1)), Beta * Beta_sign)
 
-      # Beta_list[[i]] <- Beta[sample(1:na)]
-      Beta_list[[i]] <- Beta
+      Beta_list[[i]] <- Beta[sample(1:na)]
+      # Beta_list[[i]] <- Beta
 
     } else if (Qsc == 7){ # bi-allelic minor allele
 
       Beta <- round(runif(n = 1, min = 1, max = 10), 2)
-      # Beta_sign <- sample(x = c(-1, 1), size = 1, replace = TRUE)
+      Beta_sign <- sample(x = c(-1, 1), size = 1, replace = TRUE)
 
-      Beta_list[[i]] <- c(-Beta, Beta)
-      # Beta_list[[i]] <- Beta * Beta_sign
+      # Beta_list[[i]] <- c(-Beta, Beta)
+      Beta_list[[i]] <- Beta * Beta_sign
 
-      ############### c(-0.5, 0.5)[sample[1:2]]
 
     } else if (Qsc == 8){ # bi-allelic minor allele
 
       Beta <- round(runif(n = 1, min = 1, max = 10), 2)
-      # Beta_sign <- sample(x = c(-1, 1), size = 1, replace = TRUE)
+      Beta_sign <- sample(x = c(-1, 1), size = 1, replace = TRUE)
 
-      Beta_list[[i]] <- c(-Beta, Beta)
-      # Beta_list[[i]] <- Beta * Beta_sign
+      # Beta_list[[i]] <- c(-Beta, Beta)
+      Beta_list[[i]] <- Beta * Beta_sign
 
     }
 
