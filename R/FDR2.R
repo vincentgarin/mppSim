@@ -51,8 +51,14 @@ FDR2 <- function(QTL_true, QTL_detected, n_des = 9, n_mod = 4, n_chr){
 
       for(k in 1:n_mod){
 
-        TPR_res[ind.res] <- emp_chr %in% QTL_det_ij[[k]]$chr * 1
-        ind.res <- ind.res + 1
+        if(is.data.frame(QTL_det_ij[[k]])){
+
+          TPR_res[ind.res] <- emp_chr %in% QTL_det_ij[[k]]$chr * 1
+          ind.res <- ind.res + 1
+
+        }
+
+
 
       }
 
