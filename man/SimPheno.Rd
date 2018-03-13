@@ -4,12 +4,10 @@
 \alias{SimPheno}
 \title{Simulation of phenotypic values}
 \usage{
-SimPheno(QTL, y_poly, k = 1, her, mppData, mppData_bi, par_clu = par_clu)
+SimPheno(QTL, k = 1, her, mppData, mppData_bi, par_clu = par_clu)
 }
 \arguments{
 \item{QTL}{list of QTL position obtained with function \code{\link{QposSelect}}}
-
-\item{y_poly}{vector of polygenic contribution.}
 
 \item{k}{Factor representing the ration between QTL (VQ) and polygenic (Vg)
 variance (VQ = k * Vg). Default = 1.}
