@@ -59,7 +59,8 @@ SimPheno <- function(QTL, k = 1, her, mppData, mppData_bi, par_clu = par_clu){
 
   f <- (QTL[, 6]/sum(QTL[, 6]))/vQuS
 
-  Beta_scaled <- mapply(FUN = function(x, f) x * sqrt(f), x = Beta_list, f = f)
+  Beta_scaled <- mapply(FUN = function(x, f) x * sqrt(f), x = Beta_list, f = f,
+                        SIMPLIFY = FALSE)
 
   # Recalculate the scaled variance
 

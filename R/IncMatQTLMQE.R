@@ -12,12 +12,8 @@ IncMatQTLMQE <- function(x, mppData, mppData_bi, Q.eff, par.clu,
   if(Q.eff == "biall") {
 
 
-    a1 <- IncMat_QTL(x = x, mppData = mppData_bi, Q.eff = Q.eff, par.clu = par.clu,
+    IncMat_QTL(x = x, mppData = mppData_bi, Q.eff = Q.eff, par.clu = par.clu,
                                  cross.mat = cross.mat, par.mat = par.mat)
-
-    a2 <- 2 - a1
-
-    cbind(a1, a2)
 
 
   } else {
