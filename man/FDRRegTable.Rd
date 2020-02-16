@@ -5,7 +5,8 @@
 \title{FDR regression table results}
 \usage{
 FDRRegTable(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  mod_names = c("cr", "par", "anc", "biall"), des_names, n_par, N = 800)
+  mod_names = c("cr", "par", "anc", "biall"), des_names, n_par,
+  N = 800)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

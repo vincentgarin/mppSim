@@ -75,11 +75,11 @@ formMppData <- function(geno_ABH, geno_012, map, MPP_sub, mk_prob, pheno,
 
 
   mppData <- mppData_form(geno.off = geno_ABH_red, geno.par = geno_par_red,
-                          type = type, nb.gen = nb_gen, map = map, trait = trait,
+                          type = type, F.gen = nb_gen, map = map, trait = trait,
                           cross.ind = cross_ind, par.per.cross = par_per_cross)
 
   mppData_bi <- mppData_form(geno.off = geno012_red, geno.par = geno_par_red,
-                             type = type, nb.gen = nb_gen, map = map,
+                             type = type, F.gen = nb_gen, map = map,
                              trait = trait, IBS = TRUE, IBS.format = "012",
                              cross.ind = cross_ind,
                              par.per.cross = par_per_cross)

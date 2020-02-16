@@ -5,8 +5,8 @@
 \title{Table of TPR results for single QTLs}
 \usage{
 TPRRegTableIndQTL(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  n_QTL = 8, mod_names = c("cr", "par", "anc", "biall"), des_names = NULL,
-  n_par, N)
+  n_QTL = 8, mod_names = c("cr", "par", "anc", "biall"),
+  des_names = NULL, n_par, N)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions with frequency and number of effect

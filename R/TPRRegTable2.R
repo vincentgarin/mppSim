@@ -19,7 +19,7 @@
 #'
 #' @param n_mod Number of QTL detection models. Default = 4.
 #'
-#' @param n_QTL Number of QTL. Default = 8.
+#' @param n_QTL Number of QTL. Default = 2.
 #'
 #' @param QTL_ind Numeric indicator for the type of QTL between 1 to 8.
 #'
@@ -108,7 +108,7 @@ TPRRegTable2 <- function(QTL_true, QTL_detected, d_QTL,
 
         }
 
-        index <- QtypeId[ind_QTL_comb[j]]
+        index <- QtypeId[QTL_comb[j]]
 
         res[, index] <- TPR_j
 

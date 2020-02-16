@@ -43,7 +43,8 @@ TPR <- function(QTL.true, QTL.detected, distance = 5) {
       if((Q_i[, 2] %in% QTL.detected[, 2])){
 
         Q.det.chr_i <- QTL.detected[QTL.detected[, 2] == Q_i[, 2], ]
-        test[i] <- (sum(abs(Q.det.chr_i[, 4] - Q_i[, 3]) <= distance) == 1) * 1
+        test[i] <- any(abs(Q.det.chr_i[, 4] - Q_i[, 3]) <= distance) * 1
+        # test[i] <- (sum(abs(Q.det.chr_i[, 4] - Q_i[, 3]) <= distance) == 1) * 1
 
       }
 

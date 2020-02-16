@@ -46,6 +46,9 @@ FDR <- function(QTL.true, QTL.detected, distance = 5){
         Q.t.chr_i <- QTL.true[QTL.true[, 2] == Q_i[, 2], ]
         test[i] <- (sum(abs(Q.t.chr_i[, 3] - Q_i[, 4]) <= distance) != 1) * 1
 
+        # We look QTL detected by QTL detected so if it is in the neighbourhood
+        # it will be one otherwise 0.
+
       }
 
     }
