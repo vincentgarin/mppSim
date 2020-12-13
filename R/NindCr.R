@@ -18,8 +18,6 @@
 #'
 #' @author Vincent Garin
 #'
-#' @export
-#'
 
 NindCr <- function(N, Npar, MPP_des){
 

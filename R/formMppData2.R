@@ -1,5 +1,5 @@
 ###############
-# formMppData2 #
+# formMppData #
 ###############
 
 #' Form mppData object
@@ -15,7 +15,7 @@
 #' @param map Correspondig three column genetic map (mk.id, chr, pos cM).
 #'
 #' @param MPP_sub subset information obtained as output of the function
-#' \code{\link{SampleMPPDesign2}}.
+#' \code{\link{SampleMPPDesign}}.
 #'
 #' @param pheno Simulated phenotype values.
 #'
@@ -35,7 +35,7 @@
 #'
 
 
-formMppData2 <- function(geno_sim, nPar, map, MPP_sub, pheno,
+formMppData <- function(geno_sim, nPar, map, MPP_sub, pheno,
                          type = NULL, F.gen = NULL, BC.gen = NULL, window = 20){
 
   # equalize map and marker matrix

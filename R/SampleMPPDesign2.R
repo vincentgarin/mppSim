@@ -37,7 +37,7 @@
 #' @export
 
 
-SampleMPPDesign2 <- function(np_dia = 9, n_ind = 200, MPP_des, np_sel,
+SampleMPPDesign <- function(np_dia = 9, n_ind = 200, MPP_des, np_sel,
                              N = 800, cr_list, ncr){
 
   # Reference diallel design par per cross

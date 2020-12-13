@@ -4,9 +4,18 @@
 \alias{FDRTable}
 \title{FDR Table}
 \usage{
-FDRTable(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  n_QTL = 2, mod_names = c("cr", "par", "anc", "biall"),
-  des_names = NULL, n_par, N)
+FDRTable(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  n_QTL = 2,
+  mod_names = c("cr", "par", "anc", "biall"),
+  des_names = NULL,
+  n_par,
+  N
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

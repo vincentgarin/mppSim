@@ -1,5 +1,5 @@
 ###########
-# dQTLTab2 #
+# dQTLTab #
 ###########
 
 #' Table with distance to the simulated QTL
@@ -30,7 +30,7 @@
 #' @export
 
 
-dQTLTab2 <- function(QTL_true = Q_sim[1:n_rep], QTL_detected = Q_res,
+dQTLTab <- function(QTL_true = Q_sim[1:n_rep], QTL_detected = Q_res,
                      des_names = des_names, n_des = n_des,
                      n_mod = 4, n_QTL = 8,
                      mod_names = c('cr', 'par', 'anc', 'biall')){

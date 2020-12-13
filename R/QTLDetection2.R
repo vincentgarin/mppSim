@@ -1,5 +1,5 @@
 ################
-# QTLDetection2 #
+# QTLDetection #
 ################
 
 #' QTL detection
@@ -43,7 +43,7 @@
 # folder <- "results/QTL_detection/MPP_1"
 # Rep_id <- "Test"
 
-QTLDetection2 <- function(mppData, thre_cr, thre_par,
+QTLDetection <- function(mppData, thre_cr, thre_par,
                          thre_anc, thre_biall, win.cof = 50, win.QTL = 30,
                          folder, Rep_id, n.cores = 1){
 

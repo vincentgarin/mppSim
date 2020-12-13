@@ -1,5 +1,5 @@
 ############
-# SimPheno2 #
+# SimPheno #
 ############
 
 #' Simulation of phenotypic values
@@ -35,7 +35,7 @@
 #' @export
 
 
-SimPheno2 <- function(QTL, k = 1, her, mppData, cross_frac = c(0.5, 0.33)){
+SimPheno <- function(QTL, k = 1, her, mppData, cross_frac = c(0.5, 0.33)){
 
   NQTL <- dim(QTL)[1]
 
