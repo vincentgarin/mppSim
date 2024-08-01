@@ -22,7 +22,12 @@
 #' The parents identifiers must be the same as the rownames of geno_par.
 #'
 #' @param n_ind_cr numeric vector indicating the number of simulated genotype
-#' per cross.
+#' per cross. by default 100 genotypes per cross.
+#'
+#' @param geno_score_format \code{Character} string specifying the format of the
+#' marker scores. "numeric_IBD": 0, 1, 2 (parent 1, heterozygous, parent 2 within cross meaning)
+#' "parents_IBS": translate the (1, 2, 3) IBD information into
+#' IBS parent marker scores. Default = "numeric_IBD".
 #'
 #' @return Genotype marker matrix of all simulated crosses
 #'
@@ -33,19 +38,41 @@
 #' Karl W. Broman (2019) R/simcross: an R package for simulating and plotting general
 #' experimental crosses. \url{https://github.com/kbroman/simcross}
 #'
+#' @examples
+#'
+#' data("geno_par")
+#' rownames(geno_par) <- paste0('P', 1:nrow(geno_par))
+#'
+#' data("EUNAM_map")
+#' rownames(map) <- map[, 1]
+#'
+#' # NAM crossing scheme with 9 parents
+#' cross_scheme <- cross_scheme_NAM(9)
+#'
+#' geno <- sim_mpp_cross(geno_par = geno_par, map = map,
+#'                      cross_scheme = cross_scheme,
+#'                      n_ind_cr = rep(100, nrow(cross_scheme)),
+#'                      geno_score_format = "numeric_IBD")
+#'
+#'
+#' @import simcross
+#' @import LDcorSV
+#' @import ggplot2
+#'
 #' @export
 #'
 
-
-sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr){
+sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL,
+                          geno_score_format = "parents_IBS"){
 
   # iteration over the number of crosses
 
   pop_res <- c()
 
-  n_cross <- dim(cross_scheme)[1]
-  cr_index <- paste0("%0", nchar(n_cross), "d")
-  crosses_id <- paste0("cr", sprintf(cr_index, 1:n_cross))
+  n_cross <- nrow(cross_scheme)
+  crosses_id <- cross_scheme[, 1]
+
+  if(is.null(n_ind_cr)){n_ind_cr <- rep(100, n_cross)}
 
   map_pos <- split(x = map[, 3], f = factor(map[, 2]))
 
@@ -55,7 +82,6 @@ sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr){
   for(i in 1:n_cross){
 
     # select the two parents scores
-
     cr_par <- cross_scheme[i, 2:3]
     geno_p1p2 <- geno_par[cr_par, ]
 
@@ -81,9 +107,17 @@ sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr){
 
       geno_sim_chr_j <- geno_sim[[j]][5:(n_ind_cr[i]+4), ]
 
-      for(k in 1:dim(geno_sim_chr_j)[2]){
+      if(geno_score_format == "parents_IBS"){
 
-        geno_sim_chr_j[, k] <- geno_pipj[as.numeric(geno_sim_chr_j[, k]), k]
+        for(k in 1:dim(geno_sim_chr_j)[2]){
+
+          geno_sim_chr_j[, k] <- geno_pipj[as.numeric(geno_sim_chr_j[, k]), k]
+
+        }
+
+      } else if (geno_score_format == "numeric_IBD"){
+
+        geno_sim_chr_j <- geno_sim_chr_j - 1
 
       }
 

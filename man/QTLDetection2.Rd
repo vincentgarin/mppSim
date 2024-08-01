@@ -4,8 +4,18 @@
 \alias{QTLDetection2}
 \title{QTL detection}
 \usage{
-QTLDetection2(mppData, thre_cr, thre_par, thre_anc, thre_biall,
-  win.cof = 50, win.QTL = 30, folder, Rep_id, n.cores = 1)
+QTLDetection2(
+  mppData,
+  thre_cr,
+  thre_par,
+  thre_anc,
+  thre_biall,
+  win.cof = 50,
+  win.QTL = 30,
+  folder,
+  Rep_id,
+  n.cores = 1
+)
 }
 \arguments{
 \item{mppData}{\code{mppData} object}

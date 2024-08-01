@@ -4,9 +4,15 @@
 \alias{dQTLTab2}
 \title{Table with distance to the simulated QTL}
 \usage{
-dQTLTab2(QTL_true = Q_sim[1:n_rep], QTL_detected = Q_res,
-  des_names = des_names, n_des = n_des, n_mod = 4, n_QTL = 8,
-  mod_names = c("cr", "par", "anc", "biall"))
+dQTLTab2(
+  QTL_true = Q_sim[1:n_rep],
+  QTL_detected = Q_res,
+  des_names = des_names,
+  n_des = n_des,
+  n_mod = 4,
+  n_QTL = 8,
+  mod_names = c("cr", "par", "anc", "biall")
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

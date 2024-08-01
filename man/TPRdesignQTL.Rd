@@ -4,8 +4,15 @@
 \alias{TPRdesignQTL}
 \title{TPR for MPP design x QTL combination}
 \usage{
-TPRdesignQTL(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  n_QTL = 8, MPP_names)
+TPRdesignQTL(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  n_QTL = 8,
+  MPP_names
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

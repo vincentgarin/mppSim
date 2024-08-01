@@ -4,8 +4,15 @@
 \alias{TPRmodelQTL}
 \title{TPR for model x QTL combination}
 \usage{
-TPRmodelQTL(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  n_QTL = 8, mod_names = c("cr", "par", "anc", "biall"))
+TPRmodelQTL(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  n_QTL = 8,
+  mod_names = c("cr", "par", "anc", "biall")
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

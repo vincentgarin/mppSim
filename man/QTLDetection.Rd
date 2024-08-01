@@ -4,9 +4,21 @@
 \alias{QTLDetection}
 \title{QTL detection}
 \usage{
-QTLDetection(mppData, mppData_bi, par_clu, thre_cr, thre_par, thre_anc,
-  thre_biall, win.cof = 50, win.QTL = 30, folder, Rep_id, parallel,
-  cluster)
+QTLDetection(
+  mppData,
+  mppData_bi,
+  par_clu,
+  thre_cr,
+  thre_par,
+  thre_anc,
+  thre_biall,
+  win.cof = 50,
+  win.QTL = 30,
+  folder,
+  Rep_id,
+  parallel,
+  cluster
+)
 }
 \arguments{
 \item{mppData}{\code{mppData} object for cross-specific, parental and

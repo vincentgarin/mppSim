@@ -4,8 +4,15 @@
 \alias{TPRresProcessing}
 \title{Processing TPR results}
 \usage{
-TPRresProcessing(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  mod_names = c("cr", "par", "anc", "biall"), MPP_names)
+TPRresProcessing(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  mod_names = c("cr", "par", "anc", "biall"),
+  MPP_names
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

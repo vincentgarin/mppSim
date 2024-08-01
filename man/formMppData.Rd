@@ -4,8 +4,16 @@
 \alias{formMppData}
 \title{Form mppData objects}
 \usage{
-formMppData(geno_ABH, geno_012, map, MPP_sub, mk_prob, pheno, type = "F",
-  nb_gen = 2)
+formMppData(
+  geno_ABH,
+  geno_012,
+  map,
+  MPP_sub,
+  mk_prob,
+  pheno,
+  type = "F",
+  nb_gen = 2
+)
 }
 \arguments{
 \item{geno_ABH}{genotype matrix of the global population in ABH format.}

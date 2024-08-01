@@ -4,8 +4,15 @@
 \alias{SampleMPPDesign2}
 \title{Sample MPP design}
 \usage{
-SampleMPPDesign2(np_dia = 9, n_ind = 200, MPP_des, np_sel, N = 800,
-  cr_list, ncr)
+SampleMPPDesign2(
+  np_dia = 9,
+  n_ind = 200,
+  MPP_des,
+  np_sel,
+  N = 800,
+  cr_list,
+  ncr
+)
 }
 \arguments{
 \item{np_dia}{Parent number in the reference diallel. Default = 9.}

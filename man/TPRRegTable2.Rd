@@ -4,9 +4,19 @@
 \alias{TPRRegTable2}
 \title{TPR results for single type of QTL effect simulation}
 \usage{
-TPRRegTable2(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  n_QTL = 2, QTL_ind, mod_names = c("cr", "par", "anc", "biall"),
-  des_names = NULL, n_par, N)
+TPRRegTable2(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  n_QTL = 2,
+  QTL_ind,
+  mod_names = c("cr", "par", "anc", "biall"),
+  des_names = NULL,
+  n_par,
+  N
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

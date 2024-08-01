@@ -4,8 +4,16 @@
 \alias{plot_TP_FP}
 \title{QTL profile plot with true and false positive QTLs}
 \usage{
-plot_TP_FP(Qprof, QTL_TRUE, QTL_TP = NULL, QTL_FP = NULL, type = "l",
-  main = "QTL profile", threshold = 3, text.size = 18)
+plot_TP_FP(
+  Qprof,
+  QTL_TRUE,
+  QTL_TP = NULL,
+  QTL_FP = NULL,
+  type = "l",
+  main = "QTL profile",
+  threshold = 3,
+  text.size = 18
+)
 }
 \arguments{
 \item{Qprof}{Object of class \code{QTLprof} returned by the function

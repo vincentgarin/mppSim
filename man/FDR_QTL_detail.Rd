@@ -4,8 +4,17 @@
 \alias{FDR_QTL_detail}
 \title{Detail results FDR QTLs}
 \usage{
-FDR_QTL_detail(QTL_true, QTL_detected, d_QTL, n_des = 9, n_mod = 4,
-  mod_names = c("cr", "par", "anc", "biall"), des_names, n_par, N)
+FDR_QTL_detail(
+  QTL_true,
+  QTL_detected,
+  d_QTL,
+  n_des = 9,
+  n_mod = 4,
+  mod_names = c("cr", "par", "anc", "biall"),
+  des_names,
+  n_par,
+  N
+)
 }
 \arguments{
 \item{QTL_true}{list of true QTL positions.}

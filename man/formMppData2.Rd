@@ -4,8 +4,17 @@
 \alias{formMppData2}
 \title{Form mppData object}
 \usage{
-formMppData2(geno_sim, nPar, map, MPP_sub, pheno, type = NULL,
-  F.gen = NULL, BC.gen = NULL, window = 20)
+formMppData2(
+  geno_sim,
+  nPar,
+  map,
+  MPP_sub,
+  pheno,
+  type = NULL,
+  F.gen = NULL,
+  BC.gen = NULL,
+  window = 20
+)
 }
 \arguments{
 \item{geno_sim}{genotype matrix of the global population.}

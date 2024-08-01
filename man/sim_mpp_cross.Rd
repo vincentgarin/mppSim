@@ -4,7 +4,13 @@
 \alias{sim_mpp_cross}
 \title{Simulate MPP crosses population}
 \usage{
-sim_mpp_cross(geno_par, map, cross_scheme, n_ind_cr)
+sim_mpp_cross(
+  geno_par,
+  map,
+  cross_scheme,
+  n_ind_cr = NULL,
+  geno_score_format = "parents_IBS"
+)
 }
 \arguments{
 \item{geno_par}{Character genotype marker matrix of the parents used for the simulation.
@@ -20,7 +26,12 @@ indicator, the first parent (male), and the second parent (female).
 The parents identifiers must be the same as the rownames of geno_par.}
 
 \item{n_ind_cr}{numeric vector indicating the number of simulated genotype
-per cross.}
+per cross. by default 100 genotypes per cross.}
+
+\item{geno_score_format}{\code{Character} string specifying the format of the
+marker scores. "numeric_IBD": 0, 1, 2 (parent 1, heterozygous, parent 2 within cross meaning)
+"parents_IBS": translate the (1, 2, 3) IBD information into
+IBS parent marker scores. Default = "numeric_IBD".}
 }
 \value{
 Genotype marker matrix of all simulated crosses
@@ -30,6 +41,24 @@ The function simulates a multi-parent population composed of N F2 crosses.
 It uses the genotypes data provided in the argument geno_par. The cross
 scheme is specified in the argument cross_scheme. The functions call
 function from the simcross package (Broman, 2019)
+}
+\examples{
+
+data("geno_par")
+rownames(geno_par) <- paste0('P', 1:nrow(geno_par))
+
+data("EUNAM_map")
+rownames(map) <- map[, 1]
+
+# NAM crossing scheme with 9 parents
+cross_scheme <- cross_scheme_NAM(9)
+
+geno <- sim_mpp_cross(geno_par = geno_par, map = map,
+                     cross_scheme = cross_scheme,
+                     n_ind_cr = rep(100, nrow(cross_scheme)),
+                     geno_score_format = "numeric_IBD")
+
+
 }
 \references{
 Karl W. Broman (2019) R/simcross: an R package for simulating and plotting general
