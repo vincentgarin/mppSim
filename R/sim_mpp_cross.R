@@ -24,12 +24,13 @@
 #' @param n_ind_cr numeric vector indicating the number of simulated genotype
 #' per cross. by default 100 genotypes per cross.
 #'
-#' @param geno_score_format \code{Character} string specifying the format of the
-#' marker scores. "numeric_IBD": 0, 1, 2 (parent 1, heterozygous, parent 2 within cross meaning)
-#' "parents_IBS": translate the (1, 2, 3) IBD information into
-#' IBS parent marker scores. Default = "numeric_IBD".
+#' @return List with genotype marker matrices of all simulated crosses in
+#' different format:
 #'
-#' @return Genotype marker matrix of all simulated crosses
+# geno_num_IBD: numeric IBD: 0, 1, 2: copy of the cross second parent allele.
+# geno_chr_IBD: character IBD: "A", "H" "B": within cross indication of parent origin
+# geno_chr_IBS: character IBS: "AA", "AC", "CC": marker score
+# geno_num_IBS: numeric IBS: 0, 1, 2: number of copies of the minor allele
 #'
 #' @author Vincent Garin
 #'
@@ -51,8 +52,7 @@
 #'
 #' geno <- sim_mpp_cross(geno_par = geno_par, map = map,
 #'                      cross_scheme = cross_scheme,
-#'                      n_ind_cr = rep(100, nrow(cross_scheme)),
-#'                      geno_score_format = "numeric_IBD")
+#'                      n_ind_cr = rep(100, nrow(cross_scheme)))
 #'
 #'
 #' @import simcross
@@ -62,12 +62,10 @@
 #' @export
 #'
 
-sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL,
-                          geno_score_format = "parents_IBS"){
+sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL){
 
-  # iteration over the number of crosses
-
-  pop_res <- c()
+  # space to store the results
+  geno_num_IBD <- geno_chr_IBD <- geno_chr_IBS <- c()
 
   n_cross <- nrow(cross_scheme)
   crosses_id <- cross_scheme[, 1]
@@ -79,6 +77,7 @@ sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL,
   n_chr <- length(map_pos)
   chr_lgh <- unlist(lapply(map_pos, max))
 
+  # iteration over the number of crosses
   for(i in 1:n_cross){
 
     # select the two parents scores
@@ -101,27 +100,34 @@ sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL,
 
     # fill with the actual parent genotypes scores
 
-    geno_res_i <- c()
+    geno_num_IBD_i <- geno_chr_IBD_i <- geno_chr_IBS_i <- c()
 
     for(j in 1:n_chr){
 
-      geno_sim_chr_j <- geno_sim[[j]][5:(n_ind_cr[i]+4), ]
+      geno_sim_chr_ij <- geno_sim[[j]][5:(n_ind_cr[i]+4), ]
 
-      if(geno_score_format == "parents_IBS"){
+      # numeric IBD
+      geno_num_IBD_ij <- geno_sim_chr_ij - 1
 
-        for(k in 1:dim(geno_sim_chr_j)[2]){
+      # character IBD
+      geno_chr_IBD_ij <- apply(X = geno_num_IBD_ij, MARGIN = 2, as.character)
+      geno_chr_IBD_ij[geno_chr_IBD_ij == "0"] <- "A"
+      geno_chr_IBD_ij[geno_chr_IBD_ij == "1"] <- "H"
+      geno_chr_IBD_ij[geno_chr_IBD_ij == "2"] <- "B"
 
-          geno_sim_chr_j[, k] <- geno_pipj[as.numeric(geno_sim_chr_j[, k]), k]
 
-        }
+      # character IBS
+      geno_chr_IBS_ij <- geno_sim_chr_ij
+      for(k in 1:dim(geno_sim_chr_ij)[2]){
 
-      } else if (geno_score_format == "numeric_IBD"){
-
-        geno_sim_chr_j <- geno_sim_chr_j - 1
+        geno_chr_IBS_ij[, k] <- geno_pipj[as.numeric(geno_chr_IBS_ij[, k]), k]
 
       }
 
-      geno_res_i <- cbind(geno_res_i, geno_sim_chr_j)
+      # combine the different matrix
+      geno_num_IBD_i <- cbind(geno_num_IBD_i, geno_num_IBD_ij)
+      geno_chr_IBD_i <- cbind(geno_chr_IBD_i, geno_chr_IBD_ij)
+      geno_chr_IBS_i <- cbind(geno_chr_IBS_i, geno_chr_IBS_ij)
 
     }
 
@@ -131,13 +137,27 @@ sim_mpp_cross <- function(geno_par, map, cross_scheme, n_ind_cr = NULL,
     geno_id <- paste0("g", sprintf(geno_n_id, 1:n_ind_cr[i]))
     nm_geno_i <- paste0(crosses_id[i], '_', geno_id)
 
-    rownames(geno_res_i) <- nm_geno_i
+    rownames(geno_num_IBD_i) <- rownames(geno_chr_IBD_i) <-
+      rownames(geno_chr_IBS_i) <- nm_geno_i
 
-    pop_res <- rbind(pop_res, geno_res_i)
+    # colnames(geno_num_IBD_i) <- colnames(geno_chr_IBD_i) <- map[, 1]
+
+    # add it to the global matrices
+    geno_num_IBD <- rbind(geno_num_IBD, geno_num_IBD_i)
+    geno_chr_IBD <- rbind(geno_chr_IBD, geno_chr_IBD_i)
+    geno_chr_IBS <- rbind(geno_chr_IBS, geno_chr_IBS_i)
+
+
 
   }
 
-  colnames(pop_res) <- map[, 1]
-  return(pop_res)
+  # calculate geno num IBS (minor allele frequency)
+  geno_num_IBS <- geno_012(mk.mat = geno_chr_IBS)[[1]]
+
+  colnames(geno_num_IBD) <- colnames(geno_chr_IBD) <- map[, 1]
+  colnames(geno_num_IBS) <-colnames(geno_chr_IBS) <- map[, 1]
+
+  return(list(geno_num_IBD = geno_num_IBD, geno_num_IBS = geno_num_IBS,
+              geno_chr_IBD = geno_chr_IBD, geno_chr_IBS = geno_chr_IBS))
 
 }

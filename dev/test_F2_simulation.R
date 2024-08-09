@@ -32,7 +32,7 @@ data("EUNAM_map")
 rownames(map) <- map[, 1]
 
 # NAM crossing scheme with 9 parents
-cross_scheme <- cross_scheme_NAM(9)
+cross_scheme <- cross_scheme_NAM(nrow(geno_par))
 
 geno <- sim_mpp_cross(geno_par = geno_par, map = map,
                       cross_scheme = cross_scheme,
