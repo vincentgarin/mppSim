@@ -1,0 +1,1066 @@
+---
+title: "Theoretical elements of simulation in multiple cross population"
+author:
+  - Vincent Garin^[CIRAD, vincent.garin@cirad.fr]
+  - Capucine Mayoud^[Université de Montpellier]
+date: "2024-10-02"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{Theoretical elements of simulation in multiple cross population}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<style type="text/css">
+  body{font-size: 14pt;}
+  code.r{font-size: 14pt;}
+  pre {font-size: 14pt}
+</style>
+
+## Single cross F2 HWE population
+
+### Marker score variance
+
+Let us assume a bi-allelic SNP marker $X$ where the two alleles frequencies are defined as such
+
+-   $p$ : major ($A$) allele frequency
+
+-   $q$ : minor ($a$) allele frequency
+
+-   $p + q = 1$
+
+Assuming Hardy-Weinberg equilibrium, we have the following genotype frequencies
+
+$$
+\begin{align}
+X & = \begin{cases}
+AA \quad & 0 \quad \text{with a probability} \quad p^2\\
+Aa \quad & 1 \quad \text{with a probability} \quad 2pq\\
+aa \quad & 2 \quad \text{with a probability} \quad q^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+We can calculate the variance of such a random variable using the general following expression of the variance
+
+$$V[X] = E[X^2] - E[X]^2$$
+The expectation is expressed as such
+
+$$
+\begin{align}
+E[X] & = 0 * p^2 + 1 * 2pq + 2 * q^2 \\
+     & = 2pq + 2q^2 = 2q(p+q)\\
+     & = 2q\\
+\end{align}
+$$
+And the expectation of the squared variable can be developped like that
+
+$$
+\begin{align}
+E[X^2] & = 0^2 * p^2 + 1^2 * 2pq + 2^2 * q^2 \\
+     & = 2pq + 4q^2
+\end{align}
+$$
+
+By combining those expression we get the expression for the marker score variance
+
+$$
+\begin{align}
+V[X] & = 2pq + 4q^2 - (2p)^2 \\
+     & = 2pq
+\end{align}
+$$
+
+
+### Single QTL variance
+
+Let us now derive the genetic variance of the previous marker assuming that this marker is a quantitative trait locus with an additive effect $a$ associated to it. In that case we have the following phenotypes
+
+$$
+\begin{align}
+G(AA) & = -a \quad \text{with probability} \quad p^2\\
+G(AB) & = d  \quad \text{with probability} \quad 2 p q\\
+G(BB) & = a  \quad \text{with probability} \quad q^2\\
+\end{align}
+$$
+
+For simplicity we will assume no dominance effect ($d = 0$).
+
+The expected phenotypic value $E[y]$ of such a single locus model is
+
+$$
+\begin{align}
+E[y] & = p^2 * a - q^2 * a \\
+     & = a*(p^2 - q^2) \\
+     & = a*(p+q)(p-q) \\
+     & = a*(p-q)
+\end{align}
+$$
+The expected squared phenotypic value $E[y^2]$ is
+
+$$
+\begin{align}
+E[y^2] & = p^2 * a^2 + q^2 * a^2 \\
+       & = a^2*(p^2 + q^2)
+\end{align}
+$$
+
+Therefore the variance $V[y] = E[y^2] - E[y]^2$
+
+$$
+\begin{align}
+\sigma_G^2 & =  a^2*(p^2 - q^2) - [a*(p-q)]^2\\
+           & =  a^2*(p^2 + q^2) - [a^2*(p^2 - 2pq + q^2)]\\
+           & =  2pq a^2\\
+\end{align}
+$$
+
+### Expression of the additive effect given $\sigma_G^2$
+
+From the last expression we can derive an expression for the additive effect given the additive genetic variance that could be used to simulate effect corresponding to a certain variance (We still assume $d = 0$).
+
+$$
+\begin{align}
+\sigma_{G}^2 & = 2pq a^2 \\
+a^2 & = \frac{\sigma_{G}^2}{2pq}\\
+a & = \pm\sqrt{\frac{\sigma_{G}^2}{2pq}}\\
+\end{align}
+$$
+
+### Simulated additive effect to match expected and realized variance
+
+We must sample QTL effects so that the realized numerical variance match the simulated expected variance.
+
+Let us define $\sigma_P^2$ the realized (numerical) phenotypic variance. This term is defined as the product of the QTL marker score and its aditive effect. We assume a single QTL that account for the whole genetic effect.
+
+$$
+\begin{align}
+P & = X * a \\
+V(P) = \sigma_{P}^2 & = V(X * a)\\
+       \sigma_{P}^2 & = V(X) * a^2\\
+                    & = \sigma_{X}^2 * \frac{\sigma_{G}^2}{2pq}\\
+                    & = \sigma_{X}^2 * \frac{\sigma_{G}^2}{2pq}\\
+                    & = \sigma_{X}^2 * \frac{1}{2pq} * \sigma_{G}^2\\
+\end{align}
+$$
+
+We would like that the phenotypic variance is equivalent to the genotypic variance $\sigma_P^2 = \sigma_G^2$. We can distinghuish two situations. If the marker score $X$ is not standardized ($\sigma_{X}^2 = 2pq$)
+
+$$
+\sigma_{P}^2 = 2pq * \frac{1}{2pq} * \sigma_{G}^2 = \sigma_{G}^2 
+$$
+In that case $\sigma_{P}^2 = \sigma_{G}^2$. No need for correction of the simulated QTL additive effect (to be checked).
+
+If the marker score is standardized ($\sigma_{X}^2 = 1$), then
+
+$$
+\begin{align}
+\sigma_{P}^2 & = 1 * \frac{1}{2pq} * \sigma_{G}^2 \\
+             & = \frac{1}{2pq} \sigma_{G}^2 \\
+             & = \frac{1}{2*0.5*0.5} \sigma_{G}^2 \quad \text{assuming} \quad p=q=0.5 \\
+             & = 2 \sigma_{G}^2 \\
+\end{align}
+$$
+
+In that case, we need to add a factor in front of the simulated additive effect
+
+$$
+\begin{align}
+a & = \pm\sqrt{\frac{1}{2}}\sqrt{\frac{\sigma_{G}^2}{2pq}}\\
+  &  = \pm\sqrt{\frac{\sigma_{G}^2}{4pq}}\\
+\end{align}
+$$
+
+to  get
+
+$$
+\begin{align}
+\sigma_{P}^2 & = \sigma_{X}^2 * a^2\\
+             & = 1 * \frac{1}{2} * \frac{1}{2pq} * \sigma_{G}^2\\
+             & = 1 * \frac{1}{2} * 2 * \sigma_{G}^2\\
+\sigma_{P}^2 & =  \sigma_{G}^2\\
+\end{align}
+$$
+
+
+```{r F2 single QTL variance}
+sim_pheno <- c()
+```
+
+### Extension of the formula for multiple QTL
+
+If we assume that the QTL only account for a fraction of the total variance $k_i$, we can modify the formula like that to give an expression $\beta_i$ for the $i^{th}$ QTL effect.
+
+
+$$
+\begin{align}
+\beta_i &  = \pm\sqrt{\frac{1}{2}}\sqrt{\frac{k_i * \sigma_{G}^2}{2pq}}\\
+        &  = \pm\sqrt{\frac{k_i * \sigma_{G}^2}{4pq}}\\
+\end{align}
+$$
+
+This is similar to the expression proposed by @mollandin_accounting_2022 to simulate QTL effect using Cattle SNP data
+
+$$
+\beta_i = \pm(\frac{1}{2})\sqrt{\frac{k_i*\sigma_{G}^2}{2p_i(1-p_i)}}
+$$
+
+
+There correction factor $\frac{1}{2}$ is different from the $\sqrt{\frac{1}{2}}$ use in the $F_2$ HWE setting.
+
+
+```{r F2 multiple QTL variance}
+sim_pheno <- c()
+```
+
+## Multiple cross F2 HWE population
+
+We can extend the previous reasoning and derivation to the multiple crosses ($n_c \ge 2$).
+
+### Marker score variance - two crosses ($n_c = 2$)
+
+We start to develop the formula for a situation with two crosses.
+
+Cross 1
+
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{avec une probabilité} \quad p_1^2\\
+1 & \text{avec une probabilité} \quad 2p_1q_1\\
+2 & \text{avec une probabilité} \quad q_1^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+Cross 2
+
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{avec une probabilité} \quad p_2^2\\
+1 & \text{avec une probabilité} \quad 2p_2q_2\\
+2 & \text{avec une probabilité} \quad q_2^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+
+To derive the variance of a random variable distributed over multiple-subspace (crosses), we can use the conditional variance formula for a disjoint partition of the probabilistic space (cross) $C_1, C_2, ..., C_n$
+
+$$
+\begin{align}
+V[X] & = \sum_{i=1}^n V[X|C_i]*P(C_i) \\
+     & + \sum_{i=1}^n E[X|C_i]^2 * (1-P(C_i)P(C_i)) \quad \\
+     & -2\sum_{i=2}^n \sum_{j=1}^{i-1}  [E[X|C_i]*P(C_i)] * [E[X|C_j]*P(C_j)] \\
+\end{align}
+$$
+
+In the case of a two crosses we have
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+
+Where $\phi_1$ and $\phi_2$ represent the probability to be in cross 1 and 2,  respectively. $\delta_i = (\phi_i - 1)\phi_i$.
+
+So we need to estimate the following components
+
+$E[X|C_1]$
+
+$E[X|C_2]$
+
+$E[X^2|C_1]$
+
+$E[X^2|C_2]$
+
+$V[X|C_1]$
+
+$V[X|C_2]$
+
+Development of the different terms of the expressions
+
+$$
+\begin{align}
+E[X|C_1] & = 0 * p_1^2 + 1 * 2p_1q_1 + 2 * q_1^2\\
+         & = 2p_1q_1 + 2q_1^2\\
+         & = 2q_1(p_1 + q_1)\\
+         & = 2q_1 * 1 \\
+         & = 2q_1
+\end{align}
+$$
+
+And,
+
+$$
+\begin{align}
+(E[X|C_1])^2 & = (2q_1)^2\\
+             & = 4q_1^2
+\end{align}
+$$
+
+And,
+
+$$
+\begin{align}
+E[X^2|C_1] & = 0^2 * p_1^2 + 1^2 * 2p_1q_1 + 2^2 * q_1^2\\
+           & = 2p_1q_1 + 4q_1^2\\
+\end{align}
+$$
+
+Therefore, the within cross conditional variance expression
+
+$$
+\begin{align}
+V[X|C_1] & = E[X^2|C_1] - (E[X|C_1])^2 \\
+         & = (2p_1q_1 + 4q_1^2) - 4q_1^2\\
+         & = 2p_1q_1
+\end{align}
+$$
+
+
+Similarly for the 2nd cross:
+
+$$
+\begin{align}
+E[X|C_2] & = 2q_2 \\
+\end{align}
+$$
+
+And,
+
+$$
+\begin{align}
+(E[X|C_2])^2 & = 4q_2^2 \\
+\end{align}
+$$
+
+And,
+
+$$
+\begin{align}
+E[X^2|C_2] & = 2p_2q_2 + 4q_2^2\\
+\end{align}
+$$
+
+And the variance,
+
+$$
+\begin{align}
+V[X|C_2] & = 2p_2q_2
+\end{align}
+$$
+
+
+Finaly, we can susstitute all those terms in the general variance formula :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+We get
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 2p_2q_2 * \phi_2 \\
+     & + 4q_1^2 * \delta_1 + 4q_2^2 * \delta_2\\
+     & - 2 * (2q_1) * \phi_1 * (2q_2) * \phi_2 \\
+\end{align}
+$$
+
+After simplification
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 4q_1^2 * \delta_1\\
+     & + 2p_2q_2 * \phi_2 + 4q_2^2 * \delta_2\\
+     & - 8 * q_1 * q_2 * \phi_1 * \phi_2 \\
+\end{align}
+$$
+
+Assuming that $p = q = 0.5$, $\phi = 0.5$, we have $\delta = 0.25$, and :
+
+$$
+\begin {align}
+V[X] & = 2 * 0.5^3 + 4 * 0.5^2 * 0.25 \\
+     & + 2 * 0.5^3 + 4 * 0.5^2 * 0.25 \\
+     & - 8 * 0.5^4 \\
+V[X] & = 0.25 + 0.25 + 0.25 + 0.25 - 0.5 \\
+     & = 0.5 \\
+\end {align}
+$$
+
+### Marker score variance - generalisation for $n_c > 2$
+
+Pour $i \neq j$ 
+$$
+V(X) = \sum_{i = 1}^{nc} X_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} ) ]
+$$
+
+$X_i = 2p_iq_i\phi_i + 4q_i^2\delta_i$ 
+
+$X_{ij} = 8q_iq_j\phi_i\phi_j$
+
+On veut démontrer que la variance du score du marqueur est bien toujours
+égale à $\frac{1}{2}$, quelque soit le nombre de croisement (avec
+$p = q = 0.5$, et $\phi = 1/nc$, d'où $\delta = \phi(1-\phi)$).
+
+Tout d'abord, on substitue les valeurs dans nos constantes: 
+$$
+\begin {align}
+X_i & = 2 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} + 4 * (\frac{1}{2})^2 * \frac{1}{nc} (1 - \frac{1}{nc}) \\
+    & = \frac{1}{2nc} + \frac{1}{nc} - \frac{1}{nc^2}\\
+    & = \frac{3}{2nc} - \frac{1}{nc^2}
+\end {align} 
+$$
+Ensuite, 
+$$
+\begin {align}
+X_{ij} & = 8 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} * \frac{1}{nc}\\
+       & = 8 * \frac{1}{4} * \frac{1}{nc^2} \\
+       & = \frac{2}{nc^2}
+\end {align} 
+$$
+
+On réinjecte dans l'expression initale :
+
+Première partie de la somme : 
+$$ 
+\begin {align}
+\sum_{i = 1}^{nc} X_i &  = \sum_{i = 1}^{nc} (\frac{3}{2nc} - \frac{1}{nc^2})\\
+                      & = nc *(\frac{3}{2nc} - \frac{1}{nc^2}) \\
+                      & = \frac{3}{2} - \frac{1}{nc} \\
+\end {align} 
+$$
+
+Deuxième partie de la somme : 
+
+$$ 
+\begin {align}
+\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} & = \sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} (\frac{2}{nc^2}) \\
+                                              & = \binom{nc}{2} * (\frac{2}{nc^2})\\
+                                              & = \frac{nc(nc-1)}{nc} * \frac{2}{nc^2} \\
+                                              & = \frac{nc-1}{nc}\\
+\end {align} 
+$$
+
+On remplace dans l'expression initiale :
+
+$$
+\begin{align}
+V(X) & = \sum_{i = 1}^{nc} X_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} ) ] \\
+     & = \frac{3}{2} - \frac{1}{nc}  - \frac{nc-1}{nc} \\
+     & = \frac{3nc - 2 - 2(nc-1)}{2nc}\\
+     & = \frac{3nc - 2 - 2nc + 2}{2nc}\\
+     & = \frac{nc}{2nc}\\
+     & = \frac{1}{2}
+\end {align} 
+$$
+
+On a donc bien ce qu'on voulait démontrer, la variance du score des
+marqueurs est bien égale à $\frac{1}{2}$ quelque soit le nombre de
+croisement.
+
+Therefore, we notice that in the HWE situation the marker score variance is consistent over crosses and it is always equal to $\frac{1}{2}$ (single crosses: $V[X] = 2pq = \frac{1}{2}$)
+
+### Single QTL variance in multiple crosses - two crosses ($n_c = 2$)
+
+Il est possible d'étendre la formule à une situation avec plusieurs
+croisements. Pour cela, commençons par une situation avec deux
+croisements par souci de simplicité.
+
+On suppose que le marqueur suivant dépend uniquement d'effets additifs
+(donc l'hétérozygote correspond à la moitié de l'homozygote). On
+considère également que l'on se place dans une population NAM où le
+parent central (référence) a un allèle valant 0.
+
+Cross 1
+
+$$
+\begin{align}
+G(AA) & = \beta_{A} = 0 \quad \text{avec une probabilité} \quad p_1^2\\
+G(AB) & = \beta_{AB} = \frac{1}{2}b \quad \text{avec une probabilité} \quad 2 p_1 q_1\\
+G(BB) & = \beta_{B} = b \quad \text{avec une probabilité} \quad q_1^2\\
+\end{align}
+$$ 
+
+Cross 2
+
+$$
+\begin{align}
+G(AA) & = \beta_{A} = 0 \quad \text{avec une probabilité} \quad p_2^2\\
+G(AC) & = \beta_{AC} = \frac{1}{2}c \quad \text{avec une probabilité} \quad 2 p_2 q_2\\
+G(CC) & = \beta_{C} = c \quad \text{avec une probabilité} \quad q_2^2\\
+\end{align}
+$$
+
+Dans ce cas, la formule de la variance conditionnelle pour une partition
+disjointe dans un espace probabiliste (croisement) $C_1, C_2, ..., C_n$
+est utilisée.
+
+$$
+\begin{align}
+V[X] & = \sum_{i=1}^n V[X|C_i]*P(C_i) \\
+     & + \sum_{i=1}^n E[X|C_i]^2 * (1-P(C_i)P(C_i)) \quad \\
+     & -2\sum_{i=2}^n \sum_{j=1}^{i-1}  [E[X|C_i]*P(C_i)] * [E[X|C_j]*P(C_j)] \\
+\end{align}
+$$
+
+Dans un cas avec deux croisements, on a :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+Où $\phi_1$ et $\phi_2$ sont les probabilités d'être dans le croisement
+1 ou 2 respectivement, et $\delta_i = (\phi_i - 1)\phi_i$.
+
+Il faut estimer les composantes suivantes :
+
+$E[X|C_1]$
+
+$E[X|C_2]$
+
+$E[X^2|C_1]$
+
+$E[X^2|C_2]$
+
+$V[X|C_1]$
+
+$V[X|C_2]$
+
+Development of the different expressions
+
+$$
+\begin{align}
+E[X|C_1] & = (p_1^2 * \beta_{A}) + \beta_{AB} * 2 p_1 q_1  + (q_1^2 * \beta_{B}) \\
+         & = (p_1^2 * 0) + \frac{1}{2}b * 2 p_1 q_1  + (q_1^2 * b) \\
+         & = p_1 q_1 b  + q_1^2 * b \\
+         & = b*(p_1 q_1 + q_1^2)\\
+         & = b*(q_1 * (p_1 + q_1))\\
+         & = b*q_1\\
+\end{align}
+$$
+
+$$
+\begin{align}
+E[X|C_2] & = (p_2^2 * \beta_{A}) +  2 p_2 q_2 * \beta_{AC}  + (q_2^2 * \beta_{C}) \\
+         & = (p_2^2 * 0) + \frac{1}{2}c * 2 p_2 q_2  + (q_2^2 * c) \\
+         & = p_2 q_2 c  + q_2^2 * b \\
+         & = c*(p_2 q_2 + q_2^2)\\
+         & = c*(q_2 * (p_2 + q_2))\\
+         & = c*q_2\\
+\end{align}
+$$
+
+Calculs intermédiaires :
+
+$$
+\begin{align}
+[E[X|C_1]]^2 & = (b*q_1)^2\\
+           & = b^2 * q_1^2\\
+\end{align}
+$$
+
+$$
+\begin{align}
+[E[X|C_2]]^2 & = (c*q_2)^2 \\
+             & = c^2 * q_2^2 \\
+\end{align}
+$$
+
+Suite développement expressions :
+
+$$
+\begin{align}
+E[X^2|C_1] & = (p_1^2 * \beta_{A}^2) + \beta_{AB}^2 * 2 p_1 q_1  + (q_1^2 * \beta_{B}^2) \\
+         & = (p_1^2 * 0) + \frac{1}{4}b^2 * 2 p_1 q_1  + (q_1^2 * b^2) \\
+         & = \frac{1}{2}p_1 q_1 * b^2  + q_1^2 * b^2 \\
+         & = b^2 * ( \frac{1}{2} p_1 q_1 + q_1^2)\\
+         & = b^2 * ( \frac{1}{2} (1-q_1) q_1 + q_1^2)\\
+         & = b^2 * ( \frac{1}{2} (q_1-q_1^2) + q_1^2)\\
+         & = b^2 * [ \frac{1}{2} q_1 - \frac{1}{2}q_1^2 + q_1^2]\\
+         & = b^2 * [ \frac{1}{2} q_1 + \frac{1}{2}q_1^2]\\
+         & =  \frac{1}{2} b^2  (q_1 + q_1^2)
+\end{align}
+$$
+
+$$
+\begin{align}
+E[X^2|C_2] & = (p_2^2 * \beta_{A}^2) + \beta_{AC}^2 * 2 p_2 q_2  + (q_2^2 * \beta_{C}^2) \\
+         & = (p_2^2 * 0) + \frac{1}{4}c^2 * 2 p_2 q_2  + (q_2^2 * c^2) \\
+         & = \frac{1}{2}p_2 q_2 * c^2  + q_2^2 * c^2 \\
+         & = ...\\
+         & =  \frac{1}{2} c^2  (q_2 + q_2^2)
+\end{align}
+$$
+
+Maintenant, on calcule les variances. Pour cela, on utilise :
+
+$$
+V[X|C_i] = E[X^2|C_i] - E[X|C_i]^2
+$$
+
+D'où :
+
+
+$$
+\begin{align}
+V[X|C_1] & = E[X^2|C_1] - E[X|C_1]^2 \\
+         & = \frac{1}{2} b^2  (q_1 + q_1^2)  - b^2q_1^2\\
+         & = \frac{1}{2} b^2  q_1 + \frac{1}{2} b^2 q_1^2  - b^2q_1^2\\
+         & = \frac{1}{2} b^2  q_1 - \frac{1}{2} b^2 q_1^2 \\
+         & = \frac{1}{2} b^2  (q_1 - q_1^2) \\
+         & = \frac{1}{2} b^2  (q_1 (1 - q_1)) \\
+         & = \frac{1}{2} b^2  q_1p_1 \\
+\end{align}
+$$ 
+
+Et,
+
+$$
+V[X|C_2] = \frac{1}{2} c^2  q_2p_2
+$$ 
+On remplace dans la formule de la variance :
+
+D'où, 
+
+$$
+\begin{align}
+V[X] & = \frac{1}{2} b^2  q_1p_1 * \phi_1 + \frac{1}{2} c^2  q_2p_2 * \phi_2 \\
+     & + b^2 * q_1^2 * \delta_1 + c^2 * q_2^2 * \delta_2 \\
+     & - 2*[(bq_1)*\phi_1] * [(cq_2)*\phi_2] \\
+\end{align}
+$$
+
+On simplifie en regroupant les termes par croisements et par effets
+$b^2q_1$ ($c^2q_2$) :
+
+$$
+\begin{align}
+V[X] & = \frac{1}{2} b^2  q_1p_1 * \phi_1 + b^2 * q_1^2 * \delta_1 \\
+     & + \frac{1}{2} c^2  q_2p_2 * \phi_2 + c^2 * q_2^2 * \delta_2 \\
+     & - 2*[(bc)*(q_1q_2)*(\phi_1 \phi_2)]  \\
+     & \\
+\end {align}
+$$
+
+D'où : 
+
+$$
+\begin {align}
+V[X] & = b^2 * (\frac{1}{2} p_1 q_1 \phi_1 + q_1^2 \delta_1) \\
+     & + c^2 * (\frac{1}{2} p_2 q_2 \phi_2 + q_2^2 \delta_2) \\
+     & - 2bc*[(q_1q_2)*(\phi_1 \phi_2)]  \\
+\end{align} 
+$$
+
+On pose :
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$
+
+Ainsi,
+
+$$
+V[X] = b^2 * C_1 + c^2 * C_2 - bc*C_{12} 
+$$
+
+### Expression of the additive effect given $\sigma_G^2$
+
+
+Ensuite, on cherche à exprimer l'effet d'un QTL à partir de l'expression de sa variance (puisque qu'il n'y a pas de dominance
+$V[X] = \sigma^2_G = \sigma^2_A$:
+
+#### Effet constant : b = c
+
+$$
+V[X] = b^2 * [C_1 + C_2 - C_{12}] 
+$$
+
+D'où, 
+
+$$
+\begin{align}
+\sigma_G^2 & = b^2 * [C_1 + C_2 - C_{12}] \\
+b^2  & = \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]} \\
+b  & = \pm\sqrt{ \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]}} \\
+\end{align}
+$$
+
+#### Effet en série allélique : c = sb
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [C_1 + s^2 C_2 - sC_{12}] \\
+\end{align}
+$$ 
+
+$$
+\begin{align}
+b^2  & = \frac{1}{4} \frac{\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]} \\
+b  & = \pm \frac{1}{2} \sqrt{ \frac{(k)*\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]}} \\
+\end{align}
+$$ 
+
+$c = s^2b$
+
+#### Pour 3 croisements :
+
+On note $d$ l'effet du 3e croisement :
+
+Croisement 1 :
+
+$E(X|C_1) = bq_1$
+$E(X^2|C_1) = \frac{1}{2}b^2(q_1+q_1^2)$
+$V(X|C_1) = \frac{1}{2} b^2q_1p_1$
+
+Croisement 2 :
+
+$E(X|C_2) = cq_2$
+$E(X^2|C_2) = \frac{1}{2}c^2(q_2+q_2^2)$
+$V(X|C_2) = \frac{1}{2} c^2q_2p_2$
+
+
+Croisement 3 :
+
+$E(X|C_3) = dq_3$
+$E(X^2|C_3) = \frac{1}{2}d^3(q_3+q_3^2)$
+$V(X|C_3) = \frac{1}{2} d^2q_3p_3$
+
+Donc on peut calculer la variance avec ces éléments, puis simplifier :
+
+
+$V(X) = b^2C_1 + c^2C_2 + d^2C_3 - bc C_{12} + bd C_{13} + cd C_{23})$
+
+Avec
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+
+$$C_3 = (\frac{1}{2} q_3p_3 \phi_3) + q_3^2 \delta_3$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$
+$$C_{13} = 2*(q_1q_3)*(\phi_1 \phi_3)$$
+$$C_{23} = 2*(q_2q_3)*(\phi_2 \phi_3)$$
+
+#### Effet constant : b = c = d
+
+$$
+V(X) = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]
+$$
+
+On peut déduire :
+
+$$
+\begin{align}
+\sigma_G^2 & = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})] \\
+b^2  & = \frac{\sigma_G^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]} \\
+b  & = \pm\sqrt{ \frac{\sigma_G^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]}} \\
+\end{align}
+$$
+
+#### Effet en série allélique : c = sb, d = s\^2b
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})] \\
+\end{align}
+$$ 
+
+$$
+\begin{align}
+b^2  & = \frac{\sigma_G^2}{[(C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]} \\
+b  & = \pm \sqrt{ \frac{(k)*\sigma_G^2}{[ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]}} \\
+\end{align}
+$$
+
+#### Généralisation pour nc croisements :
+
+##### Effet constant
+
+Pour $i \neq j$ 
+
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]
+$$ 
+
+Avec,
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où :
+
+$$
+b = \pm \frac{1}{2}  \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]}
+$$ 
+
+Le facteur 1/2, voir démonstration plus loin.
+
+##### Effets en série allélique
+
+$c = sb$ , $d = s^2b$ etc...
+
+Pour $i \neq j$ 
+
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]
+$$ 
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où :
+
+$$
+b = \pm (\frac{1}{2}) \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]} 
+$$
+
+
+### Simulated additive effect to match expected and realized variance
+
+
+As in the single cross situation, we need to add a factor to make sure that the simulated numerical (phenotypic) variance match the expected (genetic) variance
+
+
+As before, we define $\sigma_P^2$ the realized (numerical) phenotypic variance. This term is defined as the product of the QTL marker score and its aditive effect. We assume a single QTL that account for the whole genetic effect.
+
+$$
+\begin{align}
+P & = X * b \\
+V(P) = \sigma_{P}^2 & = V(X * b)\\
+       \sigma_{P}^2 & = V(X) * b^2\\
+                    & = \sigma_{X}^2 * f^2 * \frac{\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]}\\
+\end{align}
+$$
+Considering the case with non-standardized marker scores. We have shown before that in the $n_c$ cross situation $\sigma_{X}^2 = \frac{1}{2}$. Similarly we can show that the denominator expression $[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]$ is equal to $\frac{1}{8}$. Therefore, we have
+
+
+$$
+\begin{align}
+\sigma_{P}^2 & = \frac{1}{2} * f^2 * \frac{\sigma_G^2}{\frac{1}{8}}\\
+\sigma_{P}^2 & = \frac{8}{2} * f^2 * \sigma_G^2\\
+\sigma_{P}^2 & = 4 * f^2 * \sigma_G^2\\
+\end{align}
+$$
+So $f^2 = \frac{1}{4}$, and $f = \frac{1}{2}$. The formula is then updated like that
+
+$$
+b = \pm \frac{1}{2} \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]} 
+$$
+
+#### Proof about the denominator value
+
+Comme démontré plus haut, la variance théorique du score du marqueur
+$V[X]$ est égale à $\frac{1}{2}$.
+
+En prenant les mêmes considérations : $p=q = 0.5$, et $\phi = 0.5$, d'où
+$\delta=0.25$ : La valeur du dénominateur $[C_1 + C_2 -2C_{12}]$ est
+égale à :
+
+$$
+\begin {align}
+C_1 & = 0.5 * q_1 * p_1 * \phi_1 + q_1^2 * \delta_1 \\
+    & = 0.5^4 + 0.5^2 * 0.25\\
+    & = 0.125\\
+\end {align}
+$$    
+$$
+\begin {align}
+C_2 & = 0.125\\
+\end {align}
+$$
+$$
+\begin {align}
+C_{12} & = 2q_1q_2\phi_1\phi_2\\
+       & = 2 * 0.5^4 \\
+       & = 0.125\\
+[C_1 + C_2 -2C_{12}] & = 0.125 + 0.125 - 0.125 \\ 
+                     & = 0.125 \\
+\end {align}
+$$
+
+Donc $[C_1 + C_2 -2C_{12}] = \frac{1}{8}$
+
+
+##### Généralisation
+
+On suppose que $p = q = 0.5$ et que $\phi = \frac{1}{nc}$, d'où
+$\delta = \frac{1}{nc} * (1 - \frac{1}{nc})$
+
+On veut démontrer que quelque soit le nombre de croisement, le
+dénominateur
+$[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]$
+est bien égal à $\frac{1}{8}$.
+
+Tout d'abord, on substitue les valeurs dans nos constantes:
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$$
+\begin {align}
+C_i & = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i) \\
+    & = \frac{1}{2} * \frac{1}{2} *\frac{1}{2} * \frac{1}{nc} + (\frac{1}{2})^2 + \frac{1}{nc} * (1 - \frac{1}{nc}) \\
+    & = \frac{1}{8nc} + \frac{1}{4nc} * (1 - \frac{1}{nc})\\
+    & = \frac{1}{8nc} + \frac{1}{4nc} * \frac{nc-1}{nc}\\
+    & = \frac{1}{8nc} + \frac{nc-1}{4nc^2}\\
+\end {align} 
+$$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+$$
+\begin {align}
+C_{ij} & = 2 * (q_iq_j)(\phi_i \phi_j) \\
+       & = 2 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} *\frac{1}{nc} \\
+       & = \frac{1}{2nc^2}\\
+\end {align} 
+$$
+
+On réinjecte dans l'expression initale :
+$[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]$
+
+Première partie de la somme: 
+$$
+\begin {align}
+\sum_{i = 1}^{nc} C_i & = \sum_{i = 1}^{nc} (\frac{1}{8nc} + \frac{nc-1}{4nc^2})\\
+                      & = nc.(\frac{1}{8nc} + \frac{nc-1}{4nc^2})\\
+                      & = \frac{nc}{8nc} + \frac{nc.(nc-1)}{4nc^2}\\
+                      & = \frac{1}{8} + \frac{nc-1}{4nc}\\
+\end {align} 
+$$
+
+Deuxième partie :
+
+$$
+\begin {align}
+\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij}  & = \sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} (\frac{1}{2nc^2}) \\
+                                               & = \frac{1}{2nc^2} * \binom{nc}{2} \\
+                                               & = \frac{1}{2nc^2} * \frac{nc(nc-1)}{2}\\
+                                               & = \frac{nc - 1}{4nc}
+\end {align}
+$$
+
+En remplacant dans la somme : 
+$$
+\begin {align}
+[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ] & = \frac{1}{8} + \frac{nc-1}{4nc} - \frac{nc - 1}{4nc} \\
+                                                                    & = \frac{1}{8}\\
+\end {align} 
+$$
+
+On retombe donc bien sur ce qu'on voulait démontrer :
+$\frac{1}{8}$
+
+
+```{r MPP F2 single QTL variance}
+sim_pheno <- c()
+```
+
+### Extension of the formula for multiple QTL
+
+$$
+b = \pm \frac{1}{2} \sqrt\frac{k*\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]} 
+$$
+
+## Multiple cross BCxSy HWE population
+
+## Extension to other population type (e.g. BCxSy)
+
+### Genotype freqencies
+
+We can extend the previous derivation in the case of a different segregation pattern. For example $BC_1F_3$ instead of $F_2$.
+
+We still assume a bi-allelic marker system with $f(A) = p$ and $f(a) = 1 - p = q$
+
+At the BC1 generation we have
+
+$AA \quad \times \quad Aa$
+
+|  | A | a 
+|--|----|----| 
+|A | AA | Aa
+|A | AA | Aa  
+
+|  | A | a 
+|--|----|----| 
+|A | \(p^2\) | \(pq\)
+|A | \(p^2\) | \(pq\)
+
+So for the selfing generation there is one part of the population that is fixed $AA$. This part of the population get a probability $2*p^2$.
+
+The other part $Aa$ with a probability $2pq$ still vary. For example generation BC1F2
+
+|  | A | a 
+|--|----|----| 
+|A | AA | Aa
+|a | Aa | aa  
+
+|  | A | a 
+|--|----|----| 
+|A | \(p^2\) | \(pq\)
+|A | \(pq\) | \(q^2\)
+
+So at that generation the $AA$ part with a $2pq * p^2$ part is fixed. Similarly the $aa$ part with $2pq * q^2$ is also fixed.
+
+At the BC1F3 generation the only part tha vary is the $Aa$ with probability $2pq * 2pq$
+
+|  | A | a 
+|--|----|----| 
+|A | \(p^2\) | \(pq\)
+|A | \(pq\) | \(q^2\)
+
+Therefore, when we sum the different probabilities
+
+$$
+\begin{align}
+P(AA) & = 2p^2 + p^2 * 2pq + p^2 * (2pq)^2 = 2p^2 + p^2 * (\sum_{i=1}^{ns -1} (2pq)^{ns})\\
+P(Aa) & = (2pq) * (2pq) * (2pq) = (2pq)^{ns}\\
+P(aa) & = (2pq * (q^2)) +  ((2pq) * (2pq) *(q^2)) = q^2 * (\sum_{i=1}^{ns -1} (2pq)^{ns})\\
+\end{align}
+$$
+
+### Marker score variance
+
+### Single QTL variance
+
+### Simulated additive effect to match expected and realized variance
+
+```{r BCxSy single QTL variance}
+sim_pheno <- c()
+```
+
+### Extension of the formula for multiple QTL
+
+
+
+## References

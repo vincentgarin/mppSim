@@ -1,0 +1,933 @@
+---
+title: "Annexe Mémoire"
+author: "Capucine"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Notations :
+
+-   $p$ : fréquence de l'allèle majeur (l'allèle le plus représenté dans
+    la population étudiée)
+
+-   $q$ : fréquence de l'allèle mineur (le moins représenté)
+
+-   $p + q = 1$
+
+-   Equilibre de Hardy-Weinberg (HWE)
+
+### Pour 1 croisement :
+
+#### 1 - Variance du score d'un marqueur dans une population F2 sous HWE
+
+Un marqueur $X$ est supposé être bi-allélique, son score (= nombre de
+copie de l'allèle mineur) est défini comme suit :
+
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{avec une probabilité} \quad p^2\\
+1 & \text{avec une probabilité} \quad 2pq\\
+2 & \text{avec une probabilité} \quad q^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+La variance du marqueur peut être calculée comme pour n'importe
+quelle variable en utilisant : $V[X] = E[X^2] - E[X]^2$
+
+$$
+\begin{align}
+E[X] & = 0 * p^2 + 1 * 2pq + 2 * q^2 \\
+     & = 2pq + 2q^2  \\
+     & = 2q(p+q)\\
+     & = 2q\\
+\end{align}
+$$
+
+$$
+\begin{align}
+E[X^2] & = 0^2 * p^2 + 1^2 * 2pq + 2^2 * q^2 \\
+     & = 2pq + 4q^2 \\
+\end{align}
+$$ D'où :
+
+$$
+\begin{align}
+V[X] & = 2pq + 4q^2 - (2p)^2 \\
+     & = 2pq \\
+\end{align}
+$$
+
+#### 2 - Variance d'un QTL
+
+Le marqueur suivant est supposé être dans une situation avec un effet
+additif :
+
+$$
+\begin{align}
+G(AA) & = -a \quad \text{with probability} \quad p^2\\
+G(AB) & = d  \quad \text{with probability} \quad 2 p q\\
+G(BB) & = a  \quad \text{with probability} \quad q^2\\
+\end{align}
+$$ 
+
+Par souci de simplicité, il est supposé qu'il n'y a pas d'effet de
+dominance ($d = 0$).
+
+L'espérance phénotypique $E[y]$ pour un modèle simple locus est :
+
+$$
+E[y] = p^2 * a - q^2 * a = a*(p^2 - q^2) = a*(p+q)(p-q) = a*(p-q)
+$$ 
+
+L'espérance de la valeur phénotypique au carré est de $E[y^2]$ :
+
+$$
+E[y^2] = p^2 * a^2 + q^2 * a^2 = a^2*(p^2 + q^2)
+$$ 
+
+Par conséquent, la variance $V[y] = E[y^2] - E[y]^2$ est :
+
+$$
+\begin{align}
+\sigma_A^2 & =  a^2*(p^2 - q^2) - [a*(p-q)]^2\\
+           & =  a^2*(p^2 + q^2) - [a^2*(p^2 - 2pq + q^2)]\\
+           & =  2pq a^2\\
+\end{align}
+$$ 
+
+A partir de l'expression précédente, il est possible de dériver une
+expression de $a$ : En supposant que $d=0$, et suivant la précédente
+expression : $\sigma_{G}^2 = \sigma_{A}^2 = 2pq a^2$
+
+Mollandin et al., 2022 ont sans doute supposés que
+$\sigma_{A}^2 = k \sigma_{G}^2$
+
+$$
+\begin{align}
+a^2 & = \frac{\sigma_{G}^2}{2pq}\\
+a & = \pm\sqrt{\frac{\sigma_{G}^2}{2pq}}\\
+\end{align}
+$$ 
+
+#### 3 - Faire coïncider la variance simulée espérée (expected) et la
+variance effectivement simulée (realized)
+
+##### Formule de Mollandin et al., 2022 pour simuler 1 croisement :
+
+Cependant, Mollandin et al, 2022 ont utilisé une autre formule pour
+simuler l’effet d’un SNP dans une population comportant un croisement,
+selon la proportion de variance génétique totale portée par ce QTL:
+
+$\beta_i=\frac{1}{2} u_i \sqrt{\frac{k_i \sigma_G^2}{2p_i q_i }}$ (1)
+
+-   $β_i$ : effet du SNP i
+-   $u_i$ : provient d’une distribution uniforme {-1,1} qui permet
+    d’allouer une valeur positive ou négative à l’effet du SNP i
+-   $σ_g^2$ : variance additive
+-   $k_i$ : proportion de variance additive ($σ_g^2$ ) expliquée par le
+    SNP i
+-   $q_i$ ($p_i$ ) : fréquence de l’allèle mineur (majeur) du SNP i
+    ($p_i+ q_i=1$)
+
+##### Adaptation de la formule de Mollandin et al., 2022 :
+
+En supposant que la formule (1) est utilisée pour un seul QTL avec
+$k_i = 1$, on a :
+
+$β_i=\frac{1}{2} u_i \sqrt{\frac{\sigma_G^2}{2p_i q_i }}$ (2)
+
+Précedemment, l'expression de $a$ a été dérivée :
+
+$$
+a = \pm(\frac{1}{2})\sqrt{\frac{\sigma_{G}^2}{2pq}}
+$$ 
+
+Les phénotypes simulés sont de la forme : $y=X_{(s)}*a$ avec $X$ la
+matrice de génotypage du marqueur, standardisée ou non, et $a$ l’effet
+du QTL. La variance du phénotype d’un QTL simulé est donc :
+
+$$
+\begin{align}
+V(y) & =V(X_{(s)}*a) \\
+& =V(X_{(s)})*a^2 \\
+& = σ_X^2*a^2 \\
+& = σ_X^2 * \frac{1}{4} * \frac{\sigma_G^2}{
+2pq}\\
+& = σ_X^2 * \frac{1}{4} * 2\sigma_G^2 \quad \text{en supposant que} \quad q=p=0.5\\
+& = σ_X^2 * \frac{1}{2} * \sigma_G^2 \\
+\end{align}
+$$
+
+Or, pour les simulations, il est souhaitable que : 
+
+$$
+\sigma_G^2 = V(y) = \sigma_X^2 * a^2 
+$$
+
+Dès lors, selon si $X$ est standardisée ou non : La variance du score du
+marqueur a été démontrée auparavant et est égale à $\sigma_G^2 = 2pq$ 
+
+$$
+\begin{align}
+V(y) & = 1 * \frac{1}{2} \sigma_{G}^2 = \frac{1}{2} \sigma_{G}^2 \quad \text{pour }  X  \text{ standardisée} \quad\\
+V(y) & = 2pq * \frac{1}{2} \sigma_{G}^2 = \frac{1}{4} \sigma_{G}^2 \quad \text{ pour } X\text{ non standardisée} \quad\\
+\end{align}
+$$
+
+Cependant, on remarque que la variance réellement simulée $V(y)$ n'est
+pas exactement égale à la variance utilisée pour simuler $\sigma_g^2$
+Ainsi, pour parvenir à faire coïncider variance simulée et variance
+obtenue, il faut changer le facteur $\frac{1}{2}$ qui devient alors
+$\frac{1}{\sqrt2}$ lorsque X est standardisée, dans l'expression de $a$.
+
+En reprenant les calculs pour
+$a = \pm(\frac{1}{\sqrt2})\sqrt{\frac{\sigma_{G}^2}{2pq}}$, il suit :
+
+$$
+\begin{align}
+V(y) & =V(X_{(s)}*a) \\
+& =V(X_{(s)})*a^2 \\
+& = σ_X^2*a^2 \\
+& = σ_X^2 * \frac{1}{2} * \frac{\sigma_G^2}{
+2pq}\\
+& = σ_X^2 * \frac{1}{2} * 2\sigma_G^2 \quad \text{en supposant que} \quad q=p=0.5\\
+& = σ_X^2 * \sigma_G^2 \\
+\end{align}
+$$ 
+
+Pour X standardisée : $V(y) = 1 * \sigma_G^2$, donc la variance
+effectivement simulée est bien égale à la variance théoriquement
+simulée.
+
+La formule (1) devient donc :
+
+$β_i=\frac{1}{\sqrt2} u_i \sqrt\frac{k_i \sigma_G^2}{2p_i q_i }$ (3)
+
+### Plusieurs croisements :
+
+#### 1 - Variance du score du marqueur dans une F2 sous HWE dans une population avec plusieurs croisements
+
+##### Pour 2 croisements
+
+Pour le croisement 1 :
+
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{avec une probabilité} \quad p_1^2\\
+1 & \text{avec une probabilité} \quad 2p_1q_1\\
+2 & \text{avec une probabilité} \quad q_1^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+Pour le croisement 2 : 
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{avec une probabilité} \quad p_2^2\\
+1 & \text{avec une probabilité} \quad 2p_2q_2\\
+2 & \text{avec une probabilité} \quad q_2^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+
+La formule de la variance avec 2 croisements :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+On calcule les éléments nécessaires :
+
+$$
+\begin{align}
+E[X|C_1] & = 0 * p_1^2 + 1 * 2p_1q_1 + 2 * q_1^2\\
+         & = 2p_1q_1 + 2q_1^2\\
+         & = 2q_1(p_1 + q_1)\\
+         & = 2q_1 * 1 \\
+         & = 2q_1
+\end{align}
+$$
+
+Et, 
+$$
+\begin{align}
+(E[X|C_1])^2 & = (2q_1)^2\\
+             & = 4q_1^2
+\end{align}
+$$
+
+Similairement pour le 2è croisement :
+
+$$
+\begin{align}
+E[X|C_2] & = 2q_2 \\
+\end{align}
+$$
+
+Et,
+
+$$
+\begin{align}
+(E[X|C_2])^2 & = 4q_2^2 \\
+\end{align}
+$$
+
+Puis,
+
+$$
+\begin{align}
+E[X^2|C_1] & = 0^2 * p_1^2 + 1^2 * 2p_1q_1 + 2^2 * q_1^2\\
+           & = 2p_1q_1 + 4q_1^2\\
+\end{align}
+$$
+
+Similairement pour le croisement 2 :
+
+$$
+\begin{align}
+E[X^2|C_2] & = 2p_2q_2 + 4q_2^2\\
+\end{align}
+$$
+
+D'où :
+
+$$
+\begin{align}
+V[X|C_1] & = E[X^2|C_1] - (E[X|C_1])^2 \\
+         & = (2p_1q_1 + 4q_1^2) - 4q_1^2\\
+         & = 2p_1q_1
+\end{align}
+$$
+
+Similairement pour le croisement 2 : 
+$$
+\begin{align}
+V[X|C_2] & = 2p_2q_2
+\end{align}
+$$
+
+Ainsi, on remplace dans la formule générale de la variance :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+On a donc :
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 2p_2q_2 * \phi_2 \\
+     & + 4q_1^2 * \delta_1 + 4q_2^2 * \delta_2\\
+     & - 2 * (2q_1) * \phi_1 * (2q_2) * \phi_2 \\
+\end{align}
+$$
+
+On tente de réduire et simplifier :
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 4q_1^2 * \delta_1\\
+     & + 2p_2q_2 * \phi_2 + 4q_2^2 * \delta_2\\
+     & - 8 * q_1 * q_2 * \phi_1 * \phi_2 \\
+\end{align}
+$$
+
+Si on considère que $p = q = 0.5$ et que $\phi = 0.5$, d'où $\delta = 0.25$, on a :
+
+$$
+\begin {align}
+V[X] & = 2 * 0.5^3 + 4 * 0.5^2 * 0.25 \\
+     & + 2 * 0.5^3 + 4 * 0.5^2 * 0.25 \\
+     & - 8 * 0.5^4 \\
+V[X] & = 0.25 + 0.25 + 0.25 + 0.25 - 0.5 \\
+     & = 0.5 \\
+\end {align}
+$$
+
+##### Généralisation
+
+Pour $i \neq j$ 
+$$
+V(X) = \sum_{i = 1}^{nc} X_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} ) ]
+$$
+
+$X_i = 2p_iq_i\phi_i + 4q_i^2\delta_i$ 
+
+$X_{ij} = 8q_iq_j\phi_i\phi_j$
+
+On veut démontrer que la variance du score du marqueur est bien toujours
+égale à $\frac{1}{2}$, quelque soit le nombre de croisement (avec
+$p = q = 0.5$, et $\phi = 1/nc$, d'où $\delta = \phi(1-\phi)$).
+
+Tout d'abord, on substitue les valeurs dans nos constantes: 
+$$
+\begin {align}
+X_i & = 2 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} + 4 * (\frac{1}{2})^2 * \frac{1}{nc} (1 - \frac{1}{nc}) \\
+    & = \frac{1}{2nc} + \frac{1}{nc} - \frac{1}{nc^2}\\
+    & = \frac{3}{2nc} - \frac{1}{nc^2}
+\end {align} 
+$$
+Ensuite, 
+$$
+\begin {align}
+X_{ij} & = 8 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} * \frac{1}{nc}\\
+       & = 8 * \frac{1}{4} * \frac{1}{nc^2} \\
+       & = \frac{2}{nc^2}
+\end {align} 
+$$
+
+On réinjecte dans l'expression initale :
+
+Première partie de la somme : 
+$$ 
+\begin {align}
+\sum_{i = 1}^{nc} X_i &  = \sum_{i = 1}^{nc} (\frac{3}{2nc} - \frac{1}{nc^2})\\
+                      & = nc *(\frac{3}{2nc} - \frac{1}{nc^2}) \\
+                      & = \frac{3}{2} - \frac{1}{nc} \\
+\end {align} 
+$$
+
+Deuxième partie de la somme : 
+
+$$ 
+\begin {align}
+\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} & = \sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} (\frac{2}{nc^2}) \\
+                                              & = \binom{nc}{2} * (\frac{2}{nc^2})\\
+                                              & = \frac{nc(nc-1)}{nc} * \frac{2}{nc^2} \\
+                                              & = \frac{nc-1}{nc}\\
+\end {align} 
+$$
+
+On remplace dans l'expression initiale :
+
+$$
+\begin{align}
+V(X) & = \sum_{i = 1}^{nc} X_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} X_{ij} ) ] \\
+     & = \frac{3}{2} - \frac{1}{nc}  - \frac{nc-1}{nc} \\
+     & = \frac{3nc - 2 - 2(nc-1)}{2nc}\\
+     & = \frac{3nc - 2 - 2nc + 2}{2nc}\\
+     & = \frac{nc}{2nc}\\
+     & = \frac{1}{2}
+\end {align} 
+$$
+
+On a donc bien ce qu'on voulait démontrer, la variance du score des
+marqueurs est bien égale à $\frac{1}{2}$ quelque soit le nombre de
+croisement.
+
+#### 2 - Variance génétique à un QTL avec plusieurs croisements
+
+##### Pour 2 croisements :
+
+Il est possible d'étendre la formule à une situation avec plusieurs
+croisements. Pour cela, commençons par une situation avec deux
+croisements par souci de simplicité.
+
+On suppose que le marqueur suivant dépend uniquement d'effets additifs
+(donc l'hétérozygote correspond à la moitié de l'homozygote). On
+considère également que l'on se place dans une population NAM où le
+parent central (référence) a un allèle valant 0.
+
+Croisement 1 :
+
+$$
+\begin{align}
+G(AA) & = \beta_{A} = 0 \quad \text{avec une probabilité} \quad p_1^2\\
+G(AB) & = \beta_{AB} = \frac{1}{2}b \quad \text{avec une probabilité} \quad 2 p_1 q_1\\
+G(BB) & = \beta_{B} = b \quad \text{avec une probabilité} \quad q_1^2\\
+\end{align}
+$$ 
+
+Croisement 2 :
+
+$$
+\begin{align}
+G(AA) & = \beta_{A} = 0 \quad \text{avec une probabilité} \quad p_2^2\\
+G(AC) & = \beta_{AC} = \frac{1}{2}c \quad \text{avec une probabilité} \quad 2 p_2 q_2\\
+G(CC) & = \beta_{C} = c \quad \text{avec une probabilité} \quad q_2^2\\
+\end{align}
+$$
+
+Dans ce cas, la formule de la variance conditionnelle pour une partition
+disjointe dans un espace probabiliste (croisement) $C_1, C_2, ..., C_n$
+est utilisée.
+
+$$
+\begin{align}
+V[X] & = \sum_{i=1}^n V[X|C_i]*P(C_i) \\
+     & + \sum_{i=1}^n E[X|C_i]^2 * (1-P(C_i)P(C_i)) \quad \\
+     & -2\sum_{i=2}^n \sum_{j=1}^{i-1}  [E[X|C_i]*P(C_i)] * [E[X|C_j]*P(C_j)] \\
+\end{align}
+$$
+
+Dans un cas avec deux croisements, on a :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+Où $\phi_1$ et $\phi_2$ sont les probabilités d'être dans le croisement
+1 ou 2 respectivement, et $\delta_i = (\phi_i - 1)\phi_i$.
+
+Il faut estimer les composantes suivantes :
+
+$E[X|C_1]$
+
+$E[X|C_2]$
+
+$E[X^2|C_1]$
+
+$E[X^2|C_2]$
+
+$V[X|C_1]$
+
+$V[X|C_2]$
+
+Development of the different expressions
+
+$$
+\begin{align}
+E[X|C_1] & = (p_1^2 * \beta_{A}) + \beta_{AB} * 2 p_1 q_1  + (q_1^2 * \beta_{B}) \\
+         & = (p_1^2 * 0) + \frac{1}{2}b * 2 p_1 q_1  + (q_1^2 * b) \\
+         & = p_1 q_1 b  + q_1^2 * b \\
+         & = b*(p_1 q_1 + q_1^2)\\
+         & = b*(q_1 * (p_1 + q_1))\\
+         & = b*q_1\\
+\end{align}
+$$
+
+$$
+\begin{align}
+E[X|C_2] & = (p_2^2 * \beta_{A}) +  2 p_2 q_2 * \beta_{AC}  + (q_2^2 * \beta_{C}) \\
+         & = (p_2^2 * 0) + \frac{1}{2}c * 2 p_2 q_2  + (q_2^2 * c) \\
+         & = p_2 q_2 c  + q_2^2 * b \\
+         & = c*(p_2 q_2 + q_2^2)\\
+         & = c*(q_2 * (p_2 + q_2))\\
+         & = c*q_2\\
+\end{align}
+$$
+
+Calculs intermédiaires :
+
+$$
+\begin{align}
+[E[X|C_1]]^2 & = (b*q_1)^2\\
+           & = b^2 * q_1^2\\
+\end{align}
+$$
+
+$$
+\begin{align}
+[E[X|C_2]]^2 & = (c*q_2)^2 \\
+             & = c^2 * q_2^2 \\
+\end{align}
+$$
+
+Suite développement expressions :
+
+$$
+\begin{align}
+E[X^2|C_1] & = (p_1^2 * \beta_{A}^2) + \beta_{AB}^2 * 2 p_1 q_1  + (q_1^2 * \beta_{B}^2) \\
+         & = (p_1^2 * 0) + \frac{1}{4}b^2 * 2 p_1 q_1  + (q_1^2 * b^2) \\
+         & = \frac{1}{2}p_1 q_1 * b^2  + q_1^2 * b^2 \\
+         & = b^2 * ( \frac{1}{2} p_1 q_1 + q_1^2)\\
+         & = b^2 * ( \frac{1}{2} (1-q_1) q_1 + q_1^2)\\
+         & = b^2 * ( \frac{1}{2} (q_1-q_1^2) + q_1^2)\\
+         & = b^2 * [ \frac{1}{2} q_1 - \frac{1}{2}q_1^2 + q_1^2]\\
+         & = b^2 * [ \frac{1}{2} q_1 + \frac{1}{2}q_1^2]\\
+         & =  \frac{1}{2} b^2  (q_1 + q_1^2)
+\end{align}
+$$
+
+$$
+\begin{align}
+E[X^2|C_2] & = (p_2^2 * \beta_{A}^2) + \beta_{AC}^2 * 2 p_2 q_2  + (q_2^2 * \beta_{C}^2) \\
+         & = (p_2^2 * 0) + \frac{1}{4}c^2 * 2 p_2 q_2  + (q_2^2 * c^2) \\
+         & = \frac{1}{2}p_2 q_2 * c^2  + q_2^2 * c^2 \\
+         & = ...\\
+         & =  \frac{1}{2} c^2  (q_2 + q_2^2)
+\end{align}
+$$
+
+Maintenant, on calcule les variances. Pour cela, on utilise :
+
+$$
+V[X|C_i] = E[X^2|C_i] - E[X|C_i]^2
+$$
+
+D'où :
+
+
+$$
+\begin{align}
+V[X|C_1] & = E[X^2|C_1] - E[X|C_1]^2 \\
+         & = \frac{1}{2} b^2  (q_1 + q_1^2)  - b^2q_1^2\\
+         & = \frac{1}{2} b^2  q_1 + \frac{1}{2} b^2 q_1^2  - b^2q_1^2\\
+         & = \frac{1}{2} b^2  q_1 - \frac{1}{2} b^2 q_1^2 \\
+         & = \frac{1}{2} b^2  (q_1 - q_1^2) \\
+         & = \frac{1}{2} b^2  (q_1 (1 - q_1)) \\
+         & = \frac{1}{2} b^2  q_1p_1 \\
+\end{align}
+$$ 
+
+Et,
+
+$$
+V[X|C_2] = \frac{1}{2} c^2  q_2p_2
+$$ 
+On remplace dans la formule de la variance :
+
+D'où, 
+$$
+\begin{align}
+V[X] & = \frac{1}{2} b^2  q_1p_1 * \phi_1 + \frac{1}{2} c^2  q_2p_2 * \phi_2 \\
+     & + b^2 * q_1^2 * \delta_1 + c^2 * q_2^2 * \delta_2 \\
+     & - 2*[(bq_1)*\phi_1] * [(cq_2)*\phi_2] \\
+\end{align}
+$$
+
+On simplifie en regroupant les termes par croisements et par effets
+$b^2q_1$ ($c^2q_2$) :
+
+$$
+\begin{align}
+V[X] & = \frac{1}{2} b^2  q_1p_1 * \phi_1 + b^2 * q_1^2 * \delta_1 \\
+     & + \frac{1}{2} c^2  q_2p_2 * \phi_2 + c^2 * q_2^2 * \delta_2 \\
+     & - 2*[(bc)*(q_1q_2)*(\phi_1 \phi_2)]  \\
+     & \\
+\end {align}
+$$
+D'où : 
+$$
+\begin {align}
+V[X] & = b^2 * (\frac{1}{2} p_1 q_1 \phi_1 + q_1^2 \delta_1) \\
+     & + c^2 * (\frac{1}{2} p_2 q_2 \phi_2 + q_2^2 \delta_2) \\
+     & - 2bc*[(q_1q_2)*(\phi_1 \phi_2)]  \\
+\end{align} 
+$$
+
+On pose :
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$
+
+Ainsi,
+
+$$
+V[X] = b^2 * C_1 + c^2 * C_2 - bc*C_{12} 
+$$
+
+Ensuite, on cherche à exprimer l'effet d'un QTL à partir de l'expression
+de sa variance (puisque qu'il n'y a pas de dominance
+$V[X] = \sigma^2_G = \sigma^2_A$:
+
+###### Effet constant : b = c
+
+$$
+V[X] = b^2 * [C_1 + C_2 - C_{12}] 
+$$ ù
+
+D'où, 
+
+$$
+\begin{align}
+\sigma_G^2 & = b^2 * [C_1 + C_2 - C_{12}] \\
+b^2  & = \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]} \\
+b  & = \pm\sqrt{ \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]}} \\
+\end{align}
+$$
+
+###### Effet en série allélique : c = sb
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [C_1 + s^2 C_2 - sC_{12}] \\
+\end{align}
+$$ 
+
+$$
+\begin{align}
+b^2  & = \frac{1}{4} \frac{\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]} \\
+b  & = \pm \frac{1}{2} \sqrt{ \frac{(k)*\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]}} \\
+\end{align}
+$$ 
+
+$c = s^2b$
+
+##### Pour 3 croisements :
+
+On note $d$ l'effet du 3e croisement :
+
+Croisement 1 :
+
+$E(X|C_1) = bq_1$
+$E(X^2|C_1) = \frac{1}{2}b^2(q_1+q_1^2)$
+$V(X|C_1) = \frac{1}{2} b^2q_1p_1$
+
+Croisement 2 :
+
+$E(X|C_2) = cq_2$
+$E(X^2|C_2) = \frac{1}{2}c^2(q_2+q_2^2)$
+$V(X|C_2) = \frac{1}{2} c^2q_2p_2$
+
+
+Croisement 3 :
+
+$E(X|C_3) = dq_3$
+$E(X^2|C_3) = \frac{1}{2}d^3(q_3+q_3^2)$
+$V(X|C_3) = \frac{1}{2} d^2q_3p_3$
+
+Donc on peut calculer la variance avec ces éléments, puis simplifier :
+
+
+$V(X) = b^2C_1 + c^2C_2 + d^2C_3 - bc C_{12} + bd C_{13} + cd C_{23})$
+
+Avec
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+
+$$C_3 = (\frac{1}{2} q_3p_3 \phi_3) + q_3^2 \delta_3$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$
+$$C_{13} = 2*(q_1q_3)*(\phi_1 \phi_3)$$
+$$C_{23} = 2*(q_2q_3)*(\phi_2 \phi_3)$$
+
+###### Effet constant : b = c = d
+
+$$
+V(X) = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]
+$$
+
+On peut déduire :
+
+$$
+\begin{align}
+\sigma_G^2 & = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})] \\
+b^2  & = \frac{\sigma_G^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]} \\
+b  & = \pm\sqrt{ \frac{\sigma_G^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]}} \\
+\end{align}
+$$
+
+###### Effet en série allélique : c = sb, d = s\^2b
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})] \\
+\end{align}
+$$ 
+
+$$
+\begin{align}
+b^2  & = \frac{\sigma_G^2}{[(C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]} \\
+b  & = \pm \sqrt{ \frac{(k)*\sigma_G^2}{[ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]}} \\
+\end{align}
+$$
+
+##### Généralisation pour nc croisements :
+
+###### Effet constant
+
+Pour $i \neq j$ 
+
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]
+$$ 
+
+Avec,
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où :
+
+$$
+b = \pm \frac{1}{2}  \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]}
+$$ 
+
+Le facteur 1/2, voir démonstration plus loin.
+
+###### Effets en série allélique
+
+$c = sb$ , $d = s^2b$ etc...
+
+Pour $i \neq j$ 
+
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]
+$$ 
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où :
+
+$$
+b = \pm \frac{1}{2} \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]} 
+$$
+
+
+
+#### 3 - Faire coïncider la variance simulée espérée (expected) et la variance effectivement simulée (realized) pour plusieurs croisements
+
+##### Pour 2 croisements à effet constant :
+
+Comme démontré plus haut, la variance théorique du score du marqueur
+$V[X]$ est égale à $\frac{1}{2}$.
+
+En prenant les mêmes considérations : $p=q = 0.5$, et $\phi = 0.5$, d'où
+$\delta=0.25$ : La valeur du dénominateur $[C_1 + C_2 -2C_{12}]$ est
+égale à :
+
+$$
+\begin {align}
+C_1 & = 0.5 * q_1 * p_1 * \phi_1 + q_1^2 * \delta_1 \\
+    & = 0.5^4 + 0.5^2 * 0.25\\
+    & = 0.125\\
+\end {align}
+$$    
+$$
+\begin {align}
+C_2 & = 0.125\\
+\end {align}
+$$
+$$
+\begin {align}
+C_{12} & = 2q_1q_2\phi_1\phi_2\\
+       & = 2 * 0.5^4 \\
+       & = 0.125\\
+[C_1 + C_2 -2C_{12}] & = 0.125 + 0.125 - 0.125 \\ 
+                     & = 0.125 \\
+\end {align}
+$$
+
+Donc $[C_1 + C_2 -2C_{12}] = \frac{1}{8}$
+
+Ainsi, en reprenant : 
+$$
+\begin {align}
+V(y) & = \sigma^2_X * b^2 \\
+     & = \sigma^2_X  * \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]}\\
+     & = \frac{1}{2} * \frac{\sigma_G^2}{\frac{1}{8}}\\
+     & = \frac{1}{2} * 8 * \sigma_G^2\\
+     & = 4 \sigma_G^2
+\end {align} 
+$$
+
+Or, si on considère que
+$b = \frac{1}{2} \sqrt{\frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]}}$ 
+Dès lors, on a :
+
+$$
+\begin {align}
+V(y) & = \sigma^2_X * b^2 \\
+     & = \sigma^2_X  * \frac{1}{4} \frac{\sigma_G^2}{[C_1 + C_2 - C_{12}]}\\
+     & = \frac{1}{2} * \frac{1}{4} * \frac{\sigma_G^2}{\frac{1}{8}}\\
+     & = \frac{1}{2} * \frac{1}{4} * 8 * \sigma_G^2\\
+     & = \sigma_G^2
+\end {align} 
+$$
+
+Il faut donc bien un facteur $\frac{1}{2}$ devant l'effet b.
+
+##### Généralisation :
+
+On suppose que $p = q = 0.5$ et que $\phi = \frac{1}{nc}$, d'où
+$\delta = \frac{1}{nc} * (1 - \frac{1}{nc})$
+
+On veut démontrer que quelque soit le nombre de croisement, le
+dénominateur
+$[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]$
+est bien égal à $\frac{1}{8}$.
+
+Tout d'abord, on substitue les valeurs dans nos constantes:
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$$
+\begin {align}
+C_i & = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i) \\
+    & = \frac{1}{2} * \frac{1}{2} *\frac{1}{2} * \frac{1}{nc} + (\frac{1}{2})^2 + \frac{1}{nc} * (1 - \frac{1}{nc}) \\
+    & = \frac{1}{8nc} + \frac{1}{4nc} * (1 - \frac{1}{nc})\\
+    & = \frac{1}{8nc} + \frac{1}{4nc} * \frac{nc-1}{nc}\\
+    & = \frac{1}{8nc} + \frac{nc-1}{4nc^2}\\
+\end {align} 
+$$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+$$
+\begin {align}
+C_{ij} & = 2 * (q_iq_j)(\phi_i \phi_j) \\
+       & = 2 * \frac{1}{2} * \frac{1}{2} * \frac{1}{nc} *\frac{1}{nc} \\
+       & = \frac{1}{2nc^2}\\
+\end {align} 
+$$
+
+On réinjecte dans l'expression initale :
+$[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]$
+
+Première partie de la somme: 
+$$
+\begin {align}
+\sum_{i = 1}^{nc} C_i & = \sum_{i = 1}^{nc} (\frac{1}{8nc} + \frac{nc-1}{4nc^2})\\
+                      & = nc.(\frac{1}{8nc} + \frac{nc-1}{4nc^2})\\
+                      & = \frac{nc}{8nc} + \frac{nc.(nc-1)}{4nc^2}\\
+                      & = \frac{1}{8} + \frac{nc-1}{4nc}\\
+\end {align} 
+$$
+
+Deuxième partie :
+
+$$
+\begin {align}
+\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij}  & = \sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} (\frac{1}{2nc^2}) \\
+                                               & = \frac{1}{2nc^2} * \binom{nc}{2} \\
+                                               & = \frac{1}{2nc^2} * \frac{nc(nc-1)}{2}\\
+                                               & = \frac{nc - 1}{4nc}
+\end {align}
+$$
+
+En remplacant dans la somme : 
+$$
+\begin {align}
+[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ] & = \frac{1}{8} + \frac{nc-1}{4nc} - \frac{nc - 1}{4nc} \\
+                                                                    & = \frac{1}{8}\\
+\end {align} 
+$$
+
+On retombe donc bien sur ce qu'on voulait démontrer :
+$\frac{1}{8}$
+
+Ainsi, cela implique que l'on rajoute un facteur $\frac{1}{2}$ pour
+exprimer l'effet de $b$.
+
+Les effets égaux sont un cas particulier de la série allélique lorsque
+$s = 1$. Par extension, pour les effets en série allélique, ce facteur
+est toujours constant à $\frac{1}{2}$, dans la mesure où seul le
+dénominateur change en fonction de la valeur de $s$.

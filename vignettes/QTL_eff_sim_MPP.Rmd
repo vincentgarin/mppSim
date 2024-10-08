@@ -1,0 +1,81 @@
+---
+title: "QTL effect simulation in multiple cross population"
+author:
+  - Vincent Garin^[CIRAD, vincent.garin@cirad.fr]
+  - Capucine Mayoud^[Université de Montpellier]
+date: "2024-10-02"
+output: rmarkdown::html_vignette
+bibliography: bibliography.bib
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{QTL effect simulation in multiple cross population}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+<style type="text/css">
+  body{font-size: 14pt;}
+  code.r{font-size: 14pt;}
+  pre {font-size: 14pt}
+</style>
+
+## Simulation of genotype data
+
+Simulation of genotype data using the 'mpp_sim_cross()' function which is a wrapper function for the 'simcross' package
+
+```{r sim_geno}
+library(mppSim)
+library(GPfunctional)
+
+data("geno_par")
+rownames(geno_par) <- paste0('P', 1:nrow(geno_par))
+
+data("EUNAM_map")
+rownames(map) <- map[, 1]
+
+# NAM crossing scheme with 9 parents
+cross_scheme <- cross_scheme_NAM(9)
+
+geno <- sim_mpp_cross(geno_par = geno_par, map = map,
+                      cross_scheme = cross_scheme,
+                      n_ind_cr = rep(100, nrow(cross_scheme)))
+
+```
+
+Extension:
+
+1. simulation of different crossing scheme (NAM, factorial design, diallel)
+2. simulation of different type of cross (F2, BCxSy, RIL, DH)
+
+## Simulation of phenotypes
+
+Simulation of phenotype data based on the genotype data.
+
+```{r sim_pheno}
+geno_c1 <- geno$geno_num_IBD[1:100, ]
+colnames(map)[1] <- "mk.names"
+
+d <- GPF_sim_pheno(X = geno_c1, map = map, n_QTL = 1, prop_f = 1, h2f = 1,
+                   corr_f = 1/sqrt(2))
+
+var(d$d_y$y_f)
+```
+
+Check: get the last version of the function used by Capucine. Parameters and functionalities: Single cross, multiple cross, ...
+
+## Comparison realized pheno/geno variance with expectation
+
+## Check Linkage disequilibrium pattern
+
+## Compare simulated (genotypic) variance with mixed model estimation
+
+## Simulation and utilisation of data for genomic prediction
+
+## Simulation and utilisation of data for QTL detection 

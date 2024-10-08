@@ -1,0 +1,541 @@
+---
+title: "Variances pour plusieurs croisements"
+author: "Capucine"
+date: "2024-08-05"
+output:
+  word_document:
+    toc: true
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+editor_options:
+  markdown:
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Pour 2 croisements : 
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$
+
+$$
+V[X] = b^2 * C_1 + c^2 * C_2 - bc*C_{12} 
+$$
+
+#### b = c 
+
+$$
+V[X] = b^2 * [C_1 + C_2 - C_{12}] 
+$$
+
+D'où, 
+$$
+\begin{align}
+\sigma_A^2 & = b^2 * [C_1 + C_2 - C_{12}] \\
+b^2  & = \frac{\sigma_A^2}{[C_1 + C_2 - C_{12}]} \\
+b  & = \pm\sqrt{ \frac{\sigma_A^2}{[C_1 + C_2 - C_{12}]}} \\
+\end{align}
+$$
+
+#### c = sb 
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [C_1 + s^2 C_2 - sC_{12}] \\
+\end{align}
+$$
+
+$$
+\begin{align}
+b^2  & = \frac{1}{4} \frac{\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]} \\
+b  & = \pm \frac{1}{2} \sqrt{ \frac{(k)*\sigma_G^2}{[C_1 + s^2 C_2 - sC_{12}]}} \\
+\end{align}
+$$
+
+### Pour 3 croisements: 
+
+On note d, l'effet du 3è croisement :
+
+Croisement 1 :
+
+$$
+E(X|C_1) = bq_1 \\
+E(X^2|C_1) = \frac{1}{2}b^2(q_1+q_1^2) \\
+V(X|C_1) = \frac{1}{2} b^2q_1p_1
+$$
+
+Croisement 2 :
+
+$$
+E(X|C_2) = cq_2 \\
+E(X^2|C_2) = \frac{1}{2}c^2(q_2+q_2^2) \\
+V(X|C_2) = \frac{1}{2} c^2q_2p_2
+$$
+
+Croisement 3 :
+
+$$
+E(X|C_3) = dq_3 \\
+E(X^2|C_3) = \frac{1}{2}d^3(q_3+q_3^2) \\
+V(X|C_3) = \frac{1}{2} d^2q_3p_3
+$$
+
+Donc on peut calculer la variance avec ces éléments, puis simplifier : 
+
+$$
+V(X) = b^2C_1 + c^2C_2 + d^2C_3 - 2(bc C_{1,2} + bd C_{1,3} + cd C_{2,3}) 
+$$
+
+Avec 
+
+$$C_1 = (\frac{1}{2} q_1p_1 \phi_1) + q_1^2 \delta_1$$
+
+$$C_2 = (\frac{1}{2} q_2p_2 \phi_2) + q_2^2 \delta_2$$
+$$C_3 = (\frac{1}{2} q_3p_3 \phi_3) + q_3^2 \delta_3$$
+
+$$C_{12} = 2*(q_1q_2)*(\phi_1 \phi_2)$$ 
+$$C_{13} = 2*(q_1q_3)*(\phi_1 \phi_3)$$ 
+$$C_{23} = 2*(q_2q_3)*(\phi_2 \phi_3)$$ 
+
+#### b = c = d
+
+$$
+V(X) = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]
+$$
+
+On peut déduire : 
+
+$$
+\begin{align}
+\sigma_A^2 & = b^2[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})] \\
+b^2  & = \frac{\sigma_A^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]} \\
+b  & = \pm\sqrt{ \frac{\sigma_A^2}{[ (C_1 + C_2 + C_3) - ( C_{12} + C_{13} + C_{23})]}} \\
+\end{align}
+$$
+
+#### c = sb 
+
+$$
+\begin{align}
+\sigma_{G}^2 & = b^2 * [ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})] \\
+\end{align}
+$$
+
+J'ai pas vérifié encore si c'est 1/2 devant ...
+
+$$
+\begin{align}
+b^2  & = \frac{\sigma_G^2}{[(C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]} \\
+b  & = \pm \sqrt{ \frac{(k)*\sigma_G^2}{[ (C_1 + s^2 C_2 + s^4C_{3}) - (s C_{12} + s^2 C_{13} + s^3 C_{23})]}} \\
+\end{align}
+$$
+
+### Tentative de généralisation pour nc croisements :
+
+#### b = c = d = .... effet constant 
+
+Pour $i \neq j$ 
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ] \\
+$$
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où :
+
+$$
+b = \pm \frac{1}{2}  \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} C_i - (\sum_{i = 1}^{nc}\sum_{j = i + 1}^{nc} C_{ij} ) ]}
+$$
+Normalement c'est toujours 1/2
+
+#### c = sb, d = s^2b etc... relation entre les effets alléliques
+
+Pour $i \neq j$ 
+$$
+V(X) = b^2 [\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )] \\
+$$
+
+$C_i = (\frac{1}{2} p_i q_i \phi_i) + (q_i^2 \delta_i)$
+
+$C_{ij} = 2 * (q_iq_j)(\phi_i \phi_j)$
+
+D'où : 
+
+$$
+b = \pm \frac{1}{2} \sqrt\frac{\sigma_G^2}{[\sum_{i = 1}^{nc} s^{2(i-1)}. C_i - (\sum_{i = 1}^{nc} \sum_{j = i + 1}^{nc} s^{i+j-2}.C_{ij} )]} 
+$$
+
+
+
+### Simulations vérification variance
+
+<!-- ### AVANT MODIF SIMU :  -->
+
+<!-- ```{r, echo = FALSE} -->
+
+<!-- load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/PASmc_res_normal_10_10cross.RData") -->
+
+<!-- boxplot(res, main = "paramètres simulation, 10 QTL, 10 cross") -->
+<!-- abline(h = 100, col = "green") -->
+<!-- abline(h = 50, col = "blue") -->
+<!-- abline(h = 25, col = "red") -->
+
+<!-- load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/PASmc_res_GBLUP_10_10cross.RData") -->
+
+<!-- boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 10 cross") -->
+<!-- abline(h = 25, col = "red") -->
+<!-- abline(h = 50, col = "blue") -->
+
+
+<!-- ``` -->
+
+
+#### Pour 2 croisements :
+
+##### EFFET EGAUX
+
+Avec les paramètres par défaut :
+
+###### 10 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_equal_2cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 2 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_equal_2cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 2 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_equal_2cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 2 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_equal_2cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 2 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+##### SERIE ALLELIQUE 
+
+###### 10 QTL 
+
+- GBLUP pas d'effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_series_2cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 2 cross, serie allélique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_2cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 2 cross, serie allélique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+# load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_2cross_fixe.RData")
+# 
+# boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 2 cross, serie allélique, effet fixe cross")
+# abline(h = 25, col = "red")
+# abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+- GBLUP pas d'effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_series_2cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 2 cross, serie allelique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_2cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 2 cross, serie allelique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+# load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_2cross_fixe.RData")
+# 
+# boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 2 cross, serie allelique, effet fixe cross")
+# abline(h = 25, col = "red")
+# abline(h = 50, col = "blue")
+
+```
+
+#### Pour 5 croisements :
+
+##### EFFET EGAUX
+
+Avec les paramètres par défaut :
+
+###### 10 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_equal_5cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 5 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_equal_5cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 5 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_equal_5cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 5 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_equal_5cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 5 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+##### SERIE ALLELIQUE 
+
+###### 10 QTL 
+
+- GBLUP pas d'effet cross
+- GBLUP effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_series_5cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 5 cross, serie allélique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_5cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 5 cross, serie allélique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_5cross_fixe.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 5 cross, serie allélique, effet fixe cross")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+- GBLUP pas d'effet cross
+- GBLUP effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_series_5cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 5 cross, serie allelique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_5cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 5 cross, serie allelique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_5cross_fixe.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 5 cross, serie allelique, effet fixe cross")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+
+
+#### Pour 10 croisements :
+
+##### EFFET EGAUX
+
+###### 2 QTL, propf=1, h2f = 1
+
+```{r, echo=FALSE}
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_1_equal.RData")
+
+boxplot(res)
+
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+
+```
+
+Avec les paramètres par défaut :
+
+###### 10 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_equal_10cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 10 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_equal_10cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 10 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_equal_10cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 10 cross, effets egaux")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_equal_10cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 10 cross, effets egaux")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+##### SERIE ALLELIQUE 
+
+###### 10 QTL 
+
+- GBLUP pas d'effet cross
+- GBLUP effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_10_series_10cross.RData")
+
+boxplot(res, main = "paramètres simulation, 10 QTL, 10 cross, serie allélique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_10cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 10 cross, serie allélique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_10_series_10cross_fixe.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 10 QTL, 10 cross, serie allélique, effet fixe cross")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+
+###### 100 QTL 
+
+- GBLUP pas d'effet cross
+- GBLUP effet cross
+
+```{r, echo=FALSE}
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_normal_100_series_10cross.RData")
+
+boxplot(res, main = "paramètres simulation, 100 QTL, 10 cross, serie allelique")
+abline(h = 100, col = "green")
+abline(h = 50, col = "blue")
+abline(h = 25, col = "red")
+
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_10cross.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 10 cross, serie allelique")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+load(file= "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/test_mc/mc_res_GBLUP_100_series_10cross_fixe.RData")
+
+boxplot(res_GBLUP, main = "GBLUP, 100 QTL, 10 cross, serie allelique, effet fixe cross")
+abline(h = 25, col = "red")
+abline(h = 50, col = "blue")
+
+```
+
+

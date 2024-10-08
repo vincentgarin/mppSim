@@ -1,0 +1,963 @@
+---
+title: "Comparaison var empirique et théorique"
+author: "Capucine"
+date: "2024-07-31"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Variance de l'effet du QTL
+
+### Comparaison variance théorique et empirique :
+
+-   Pour chacun des 1000 marqueurs simulés :
+    -   Les fréquences alléliques du croisement 1 ($q_1$) et du
+        croisement 2 ($q_2$) sont tirées dans une loi uniforme bornée
+        entre $[0.05 ; 0.5]$
+
+    -   La probabilité d'être dans le croisement 1 (ou 2) :
+        $\phi_1 = \phi_2 = 0.5$\
+
+    -   Simulation des génotypes sous l'équilibre de HW : $p^2$, $2pq$,
+        $q^2$
+
+    -   $C_1 = (0.5 * p_1 * \phi_1 * q_1) + (q_1^2 * (\phi_1 * (1 - \phi_1)))$
+
+    -   $C_2 = (0.5 * p_2 * \phi_2 * q_2) + (q_2^2 * (\phi_2 * (1 - \phi_2)))$
+
+    -   $C_3 = q_1 * q_2 * \phi_1 * \phi_2$
+
+    -   Variance théorique :
+        $\sigma^2_G = (b^2 * C_1) + (c^2 * C_2) - (2 * b * c * C_3)$
+
+### 2 croisements qui ségrègent
+
+#### B = 1 et C = 2
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_essai.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_essai.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 200, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_essai.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_essai.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 1000, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_essai.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_essai.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 2000, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+#### B = 2 et C = 2
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_bc.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_bc.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 200, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_bc.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_bc.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 1000, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_bc.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_bc.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 2000, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+#### B = 3 et C = B^2 = 9
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_carre.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_carre.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 200, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_carre.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_carre.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 1000, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_carre.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_carre.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 2000, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+### 1 croisement fixé (et l'autre qui ségrège)
+
+#### B = 1 et C = 2
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_essai_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_essai_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége : N = 200, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_essai_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_essai_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 1000, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_essai_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_essai_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 2000, B = 1, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+```
+
+#### B = 2 et C = 2
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_bc_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_bc_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége : N = 200, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_bc_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_bc_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 1000, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_bc_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_bc_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 2000, B = 2, C = 2,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+#### B = 3 et C = B\^2 = 9
+
+##### N = 200 (donc N_cross1 = 100 et N_cross2 = 100)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N200_carre_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N200_carre_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 200, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 1000 (donc N_cross1 = 500 et N_cross2 = 500)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N1000_carre_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N1000_carre_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 1000, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+##### N = 2000 (donc N_cross1 = 1000 et N_cross2 = 1000)
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_mk_simu_1000_N2000_carre_fixe.RData")
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_simu_1000_N2000_carre_fixe.RData")
+
+correl<- cor(tab_param_simu$var_empi, tab_param_simu$var_theo)
+plot(tab_param_simu$var_empi, tab_param_simu$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 ségrége  : N = 2000, B = 3, C = 9,
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+## Variances simulations
+
+#### B = C
+
+$$ \sigma^2_G = b^2 * C_1 + c^2 * C_2 - 2 * b * c * C_3 $$
+
+On suppose que B = C :
+
+$$ 
+\begin{align}
+\sigma^2_G & = b^2 * C_1 + b^2 * C_2 - 2 * b * b * C_3 \\
+           & = b^2 (C_1 + C_2 - 2 * C_3)
+\end{align}
+$$ D'où,
+
+\$\$ \beta = \pm \sqrt{\frac{\sigma^2_G}{C_1 + C_2 - 2 * C_3}}
+
+\$\$ On pose $\sigma^2_G = 50$ :
+
+### 2 croisements qui ségrégent :
+
+##### N = 200
+
+```{r, echo=FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N200_bc.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("2 croisements ségrégent : 1000 mk, N = 200, moyenne = ", round(moy, 4) ))
+abline(h=50)
+
+
+```
+
+##### N = 1000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N1000_bc.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("2 croisements ségrégent : 1000 mk, N = 1000, moyenne =", round(moy, 4) ))
+
+
+```
+
+##### N = 2000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N2000_bc.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("2 croisements ségrégent : 1000 mk, N = 2000, moyenne =", round(moy, 4) ))
+
+
+```
+
+### 1 croisement fixé (et l'autre qui ségrège)
+
+##### N = 200
+
+```{r, echo=FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N200_bc_fixe.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("1 croisement fixé et 1 ségrége : 1000 mk, N = 200, moyenne = ", round(moy, 4) ))
+
+
+```
+
+##### N = 1000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N1000_bc_fixe.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("1 croisement fixé et 1 ségrége : 1000 mk, N = 1000, moyenne =", round(moy, 4) ))
+
+
+```
+
+##### N = 2000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_variances_1000_N2000_bc_fixe.RData")
+
+moy<- mean(tab_res_variances$var_sim)
+boxplot(tab_res_variances$var_sim, col = "lightblue", 
+        main = paste("1 croisement fixé et 1 ségrége : 1000 mk, N = 2000, moyenne =", round(moy, 4) ))
+
+
+```
+
+## Variance du score du marqueur
+
+Pour le croisement 1 : 
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{with probability} \quad p_1^2\\
+1 & \text{with probability} \quad 2p_1q_1\\
+2 & \text{with probability} \quad q_1^2 \\
+\end{cases}\\
+\end{align}
+$$
+
+Pour le croisement 2 : 
+$$
+\begin{align}
+X & = \begin{cases}
+0 & \text{with probability} \quad p_2^2\\
+1 & \text{with probability} \quad 2p_2q_2\\
+2 & \text{with probability} \quad q_2^2 \\
+\end{cases}\\
+\end{align}
+$$ 
+Variance avec 2 croisements : 
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+On calcule les éléments nécessaires :
+
+$$
+\begin{align}
+E[X|C_1] & = 0 * p_1^2 + 1 * 2p_1q_1 + 2 * q_1^2\\
+         & = 2p_1q_1 + 2q_1^2\\
+         & = 2q_1(p_1 + q_1)\\
+         & = 2q_1 * 1 \\
+         & = 2q_1
+\end{align}
+$$ 
+Et, 
+$$
+\begin{align}
+(E[X|C_1])^2 & = (2q_1)^2\\
+             & = 4q_1^2
+\end{align}
+$$
+
+Similairement pour le 2è croisement :
+
+$$
+\begin{align}
+E[X|C_2] & = 2q_2 \\
+\end{align}
+$$
+
+Et,
+
+$$
+\begin{align}
+(E[X|C_2])^2 & = 4q_2^2 \\
+\end{align}
+$$
+
+Puis,
+
+$$
+\begin{align}
+E[X^2|C_1] & = 0^2 * p_1^2 + 1^2 * 2p_1q_1 + 2^2 * q_1^2\\
+           & = 2p_1q_1 + 4q_1^2\\
+\end{align}
+$$ 
+Similairement pour le croisement 2 :
+
+$$
+\begin{align}
+E[X^2|C_2] & = 2p_2q_2 + 4q_2^2\\
+\end{align}
+$$ D'où :
+
+$$
+\begin{align}
+V[X|C_1] & = E[X^2|C_1] - (E[X|C_1])^2 \\
+         & = (2p_1q_1 + 4q_1^2) - 4q_1^2\\
+         & = 2p_1q_1
+\end{align}
+$$ 
+Similairement pour le croisement 2 : 
+$$
+\begin{align}
+V[X|C_2] & = 2p_2q_2
+\end{align}
+$$
+
+Ainsi, on remplace dans la formule générale de la variance :
+
+$$
+\begin{align}
+V[X] & = V[X|C_1]*\phi_1 + V[X|C_2]*\phi_2 \\
+     & + E[X|C_1]^2 * \delta_1 + E[X|C_2]^2 * \delta_2 \quad\\
+     & - 2*[E[X|C_1]*\phi_1] * [E[X|C_2]*\phi_2] \\
+\end{align}
+$$
+
+On a donc :
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 2p_2q_2 * \phi_2 \\
+     & + 4q_1^2 * \delta_1 + 4q_2^2 * \delta_2\\
+     & - 2 * (2q_1) * \phi_1 * (2q_2) * \phi_2 \\
+\end{align}
+$$ 
+On tente de réduire et simplifier :
+
+$$
+\begin{align}
+V[X] & = 2p_1q_1*\phi_1 + 4q_1^2 * \delta_1\\
+     & + 2p_2q_2 * \phi_2 + 4q_2^2 * \delta_2\\
+     & - 8 * q_1 * q_2 * \phi_1 * \phi_2 \\
+\end{align}
+$$
+
+Soit,
+
+$$
+\begin{align}
+V[X] & = 2q_1 * C_1 + 2q_2 * C_2 - C_3
+\end{align}
+$$ 
+
+Avec,
+
+$C_1 = p_1*\phi_1 + 2*q_1*\delta_1$
+
+$C_2 = p_2*\phi_2 + 2*q_2*\delta_2$
+
+$C_3 = 8 * q_1 * q_2 * \phi_1 * \phi_2$
+
+### Comparaison variance théorique et variance empirique 
+
+### 2 croisements qui ségrègent : 
+### N = 200
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N200.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 200
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+
+### N = 1000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N1000.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 1000
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+### N = 2000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N2000.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("2 croisements ségrégent : N = 2000
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+### 1 croisement fixé et l'autre qui ségrège : 
+
+### N = 200
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N200_fixe.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 croisement qui ségrège : N = 200
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+
+### N = 1000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N1000_fixe.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 croisement qui ségrège : N = 1000
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+### N = 2000
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_param_score_1000_N2000_fixe.RData")
+
+correl<- cor(tab_param_score$var_empi, tab_param_score$var_theo)
+plot(tab_param_score$var_empi, tab_param_score$var_theo,
+     pch = 19, 
+     xlab = "Variance empirique", 
+     ylab = "Variance théorique", 
+     main = paste("1 croisement fixé et 1 croisement qui ségrège : N = 2000
+      cor = ",round(correl, 5)))
+reg <- lm(var_empi ~ var_theo, data= tab_param_simu)
+abline(reg, col="cyan", lty = 2, lwd= 2)
+
+```
+
+## Variances simulations
+
+#### C = SB
+
+$$ 
+
+b = \pm \frac{1}{2} \sqrt\frac{\sigma^2_G}{C_1 + s^2 * C_2 - s*C_{1,2} }
+
+$$
+
+$$  
+
+c = 0.9^2 * b\\
+c = s * b
+
+$$
+
+#### Avec des fréquences alléliques équilibrées 
+
+```{r}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/res_effets.RData")
+
+moy <-mean(res_effets$var_s)
+
+boxplot(res_effets, main = paste("fq all équilibrées, 1000 mk, moyenne = ", round(moy, 4)))
+
+abline(h = 50, col = "cyan")
+summary(res_effets)
+
+"~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_var_1000_N200.RData"
+
+```
+
+### Avec des fréquences alléliques déséquilibrées : 
+
+#### N = 200
+```{r}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_var_1000_N200.RData")
+
+moy <-mean(tab_res_variances$var_sim)
+
+boxplot(tab_res_variances$var_sim, main = paste("fq all déséquilibrées, N= 200, 1000 mk, moyenne = ", round(moy, 4)))
+
+abline(h = 50, col = "cyan")
+summary(tab_res_variances$var_sim)
+
+
+
+```
+
+#### N = 2000
+```{r}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_var_1000_N2000.RData")
+
+moy <-mean(tab_res_variances$var_sim)
+
+boxplot(tab_res_variances$var_sim, main = paste("fq all déséquilibrées, N = 2000, 1000 mk, moyenne = ", round(moy, 4)))
+
+abline(h = 50, col = "cyan")
+summary(tab_res_variances$var_sim)
+
+
+
+```
+
+#### 1 croisement fixé :
+
+##### N = 200
+```{r}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_res_var_1000_N200_fixe.RData")
+
+moy <-mean(tab_res_variances$var_sim)
+
+boxplot(tab_res_variances$var_sim, main = paste("fq all déséquilibrées, 1 cross fixe, N= 200, 1000 mk, moyenne = ", round(moy, 4)))
+
+abline(h = 50, col = "cyan")
+# summary(tab_res_variances$var_sim)
+
+
+
+```
+
+## Plusieurs marqueurs :
+
+$$ 
+b_i = \pm \frac{1}{2} \sqrt\frac{(k_i * \sigma^2_G )}{C_1 + s^2 * C_2 - s*C_{1,2} }
+$$
+
+$$
+c_i = s * b_i
+$$
+
+La proportion de variance expliquée par un QTL, $k_i$: 
+$$ 
+k_i = 1/i^2 
+$$
+
+Puis normaliser pour avoir une somme égale à 1.
+
+La somme des variances des marqueurs doit valoir $\sigma_G^2 = 50$
+
+### C = SB 
+
+#### Fréquences équilibrées : 10 mk
+
+```{r, echo = FALSE}
+
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_sum_10_eq_csb.RData")
+
+moy <- mean(tab_sum$somme)
+
+boxplot(tab_sum$somme, main = paste("fq all équilibrées, 10 mk, 1000 rep, moyenne = ", round(moy, 4)))
+abline(h = 50, col = "cyan", lty = 2)
+summary(tab_sum$somme)
+```
+
+
+#### Fréquences équilibrées : 1000 mk
+
+```{r, echo = FALSE}
+load("~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_sum_1000_eq_csb.RData")
+
+sum(var_ns)
+
+
+```
+
+#### Fréquences déséquilibrées : 10 mk 
+
+##### N = 200
+```{r, echo = FALSE}
+
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_10_N200_csb.RData")
+
+moy <- mean(tab_somme$somme)
+
+boxplot(tab_somme$somme, main = paste("fq all déséquilibrées, N = 200, 10 mk, 1000 rep, moyenne = ", round(moy, 4)))
+abline(h = 50, col = "cyan", lty = 2)
+summary(tab_somme$somme)
+
+```
+
+
+
+##### N = 2000
+```{r, echo = FALSE}
+
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_10_N2000_csb.RData")
+
+moy <- mean(tab_somme$somme)
+
+boxplot(tab_somme$somme, main = paste("fq all déséquilibrées, N = 2000, 10 mk, 1000 rep, moyenne = ", round(moy, 4)))
+abline(h = 50, col = "cyan", lty = 2)
+summary(tab_somme$somme)
+
+```
+
+#### Fréquences déséquilibrées : 1000 mk 
+
+##### N = 200
+
+```{r, echo = FALSE}
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_1000_N200_csb.RData")
+
+tab_somme$somme
+
+```
+
+##### N = 2000 
+
+```{r, echo = FALSE}
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_1000_N2000_csb.RData")
+
+tab_somme$somme
+
+```
+
+
+
+### B = C 
+
+#### Fq déséquilibrées : 10 marqueurs
+
+##### N = 200
+```{r, echo = FALSE}
+
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_10_N200.RData")
+
+boxplot(tab_somme$somme, main = paste("fq all déséquilibrées, N = 200, 10 mk, 1000 rep, moyenne = ", round(moy, 4)))
+abline(h = 50, col = "cyan", lty = 2)
+summary(tab_somme$somme)
+
+```
+
+##### N = 2000
+```{r, echo = FALSE}
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_10_N2000.RData")
+
+boxplot(tab_somme$somme, main = paste("fq all déséquilibrées, N = 2000, 10 mk, 1000 rep, moyenne = ", round(moy, 4)))
+abline(h = 50, col = "cyan", lty = 2)
+summary(tab_somme$somme)
+```
+
+
+#### Fq déséquilibrées : 1000 marqueurs
+
+##### N = 200
+
+```{r, echo = FALSE}
+
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_1000_N200.RData")
+
+sum(tab_res_variances)
+
+```
+
+
+##### N = 2000
+```{r, echo = FALSE}
+
+load( "~/M2 DATA ANALYST/STAGE/BCNAM_Data/Scripts_Data/Simulations/tab_somme_1000_N2000.RData")
+
+sum(tab_res_variances)
+
+```
