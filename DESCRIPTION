@@ -1,7 +1,7 @@
 Package: mppSim
 Type: Package
 Title: Functions for simulation in MPP
-Version: 0.1.0
+Version: 1.0.0
 Author: Vincent Garin
 Maintainer: Vincent Garin <vincent.garin6@gmail.com>
 Description: Functions for simulation in MPP
