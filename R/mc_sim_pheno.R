@@ -38,7 +38,11 @@
 #'
 #' @param kj Character string specifying the distribution of proportion
 #' by the causal variant in the featured and residual class. One of "constant",
-#' "decrease_along_genome", "decrease_random". Default = "decrease_random"
+#' "decrease_along_genome", "decrease_random", "user_specified".
+#' Default = "decrease_random"
+#'
+#' @param k_val \code{numerical} vector specifing QTL effect given by the user.
+#' Default = NULL
 #'
 #' @param corr_f \code{numeric} value as correction factor in from of the simulated
 #' QTL effects. Default = 0.5
@@ -119,15 +123,19 @@
 #'
 #'
 #' @return list containing the following object
-#'
-#' 1. d_y: data.frame with: simulated phenotype (y_sim), featured causal variants contribution (y_f), residual causal variants contribution (y_r), error contribution (e_i)
-#' 2. mk_sel_f: selected featured causal variants
-#' 3. mk_sel_r: selected residual causal variants
-#' 4. X_f: marker matrix of the featured causal variants
-#' (if dilution_percent != 0, marker matrix with also noncausal variants featured selected)
-#' 5. X_r: marker matrix of the residual causal variants
-#' 6. Bf: Additive effect of the featured causal variants
-#' 7. Br: Additive effect of the residual causal variants
+#' \enumerate{
+#' \item{ d_y: data.frame with: simulated phenotype (y_sim), featured causal
+#' variants contribution (y_f), residual causal variants contribution (y_r),
+#'  error contribution (e_i)}
+#' \item{ mk_sel_f: selected featured causal variants}
+#' \item{ mk_sel_r: selected residual causal variants}
+#' \item{ X_f: marker matrix of the featured causal variants
+#' (if dilution_percent != 0, marker matrix with also noncausal variants
+#'  featured selected)}
+#' \item{ X_r: marker matrix of the residual causal variants}
+#' \item{ Bf: Additive effect of the featured causal variants}
+#' \item{ Br: Additive effect of the residual causal variants}
+#' }
 #'
 #' @examples
 #'
@@ -223,6 +231,7 @@
 # h2f = 0.5
 # theta = 0.95
 # kj = "decrease_random"
+# k_val = rep(0.1, n_QTL)
 # dilution_percent = 0
 # corr_f = 0.5
 # type_effect = "series"
@@ -234,6 +243,7 @@ mc_sim_pheno <- function(X, map, n_QTL = 100, QTL_distribution = "random",
                          Sp = 100, mu = 50, h2 = 0.5, h2f = 0,
                          scale_mk = FALSE,
                          theta = 0.95, kj = "decrease_random",
+                         k_val = NULL,
                          corr_f = 0.5,
                          dilution_percent = 0,
                          type_effect = "equal", s_effect = 0.9){
@@ -311,7 +321,13 @@ mc_sim_pheno <- function(X, map, n_QTL = 100, QTL_distribution = "random",
     k_f <- sample(mk_dist[sel_kf]/sum(mk_dist[sel_kf]))
     k_r <- sample(mk_dist[sel_kr]/sum(mk_dist[sel_kr]))
 
+  } else if (kj == "user_specified"){
+
+    k_f <- k_val[sel_kf]
+    k_r <- k_val[sel_kr]
+
   }
+
 
 
   ### Computation of the QTL effect with multiple cross formula ----

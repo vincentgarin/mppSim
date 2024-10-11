@@ -26,13 +26,17 @@ knitr::opts_chunk$set(
   pre {font-size: 14pt}
 </style>
 
-## Simulation of genotype data
+## Simulation of genotype and phenotype data
 
-Simulation of genotype data using the 'mpp_sim_cross()' function which is a wrapper function for the 'simcross' package
+Simulation of genotype and phenotype data using 'mpp_sim_cross()',
+and 'mc_sim_pheno()' functions which is a wrapper function for the
+'simcross' package
 
 ```{r sim_geno}
 library(mppSim)
-library(GPfunctional)
+library(mppR)
+library(rrBLUP)
+library(simcross)
 
 data("geno_par")
 rownames(geno_par) <- paste0('P', 1:nrow(geno_par))
@@ -40,12 +44,63 @@ rownames(geno_par) <- paste0('P', 1:nrow(geno_par))
 data("EUNAM_map")
 rownames(map) <- map[, 1]
 
-# NAM crossing scheme with 9 parents
-cross_scheme <- cross_scheme_NAM(9)
+# Genotype and Phenotype data simulation from NAM crossing scheme with
+#n cross (nC) and n QTL (nQTL)
 
-geno <- sim_mpp_cross(geno_par = geno_par, map = map,
-                      cross_scheme = cross_scheme,
-                      n_ind_cr = rep(100, nrow(cross_scheme)))
+nC <- c(2,5,8)
+nQTL <- c(1, 10 ,100 )
+nScenar <- expand.grid(nQTL, nC)
+colnames(nScenar) <- c("nQTL", "nC")
+nit <- nrow(nScenar)
+
+#pdf(file = "To define")
+nit <- 2
+for(i in 1:nit){
+
+  # gen data simulation ----
+  nParents <- nScenar$nC[i]+1
+  cross_scheme <- cross_scheme_NAM(np = nParents)
+  geno_par_i <- geno_par[1:nParents, ]
+
+  geno <- sim_mpp_cross(geno_par = geno_par_i, map = map,
+                        cross_scheme = cross_scheme,
+                        n_ind_cr = rep(100, nrow(cross_scheme)))
+  
+  # phen data simulation ----
+   y_sim <- mc_sim_pheno(X = geno$geno_num_IBD, map = map,
+                         type_effect = "equal")
+
+  # test simulation consistency ----
+  res <- matrix(NA, nrow = 100, ncol = 4)
+
+  for(j in 1:100){
+
+    d <- mc_sim_pheno(X = geno$geno_num_IBD, map = map,
+                      type_effect = "equal", n_QTL = nScenar$nQTL[i])
+    res[j, ] <- diag(var(d$d_y))
+
+
+  }
+
+  
+  # Plot ----
+  title_i <- paste("nCross = ", nScenar$nC[i], "-",
+                   "nQTL = ", nScenar$nQTL[i])
+  colnames(res) <- c("Sp", "Sgf", "Sg", "Se")
+  res <- res[, -2]
+  res <- data.frame(res)
+  boxplot(res, main=title_i)
+
+  abline(h = 100, col = "green")
+  abline(h = 50, col = "blue")
+
+}
+
+ boxplot(res, main=title_i)
+  abline(h = 100, col = "green")
+  abline(h = 50, col = "blue")
+#dev.off()
+
 
 ```
 
@@ -54,21 +109,6 @@ Extension:
 1. simulation of different crossing scheme (NAM, factorial design, diallel)
 2. simulation of different type of cross (F2, BCxSy, RIL, DH)
 
-## Simulation of phenotypes
-
-Simulation of phenotype data based on the genotype data.
-
-```{r sim_pheno}
-geno_c1 <- geno$geno_num_IBD[1:100, ]
-colnames(map)[1] <- "mk.names"
-
-d <- GPF_sim_pheno(X = geno_c1, map = map, n_QTL = 1, prop_f = 1, h2f = 1,
-                   corr_f = 1/sqrt(2))
-
-var(d$d_y$y_f)
-```
-
-Check: get the last version of the function used by Capucine. Parameters and functionalities: Single cross, multiple cross, ...
 
 ## Comparison realized pheno/geno variance with expectation
 
@@ -77,5 +117,100 @@ Check: get the last version of the function used by Capucine. Parameters and fun
 ## Compare simulated (genotypic) variance with mixed model estimation
 
 ## Simulation and utilisation of data for genomic prediction
+Utilisation of simulated data for genomic prediction
+```{r genomic prediction}
+# Genomic prediction usage ----
+# process pheno data
+
+geno_IBS <- geno$geno_num_IBS
+cross_ind <- substr(rownames(geno_IBS), 1, 3)
+
+# calculate kinship
+K <- A.mat(X = geno_IBS - 1)
+
+d <- data.frame(GID = rownames(geno_IBS), cross = cross_ind, y = y_sim$d_y$y_sim)
+
+# data partition
+k <- 4
+VS <- matrix(sample(1:nrow(d)), ncol = k) # need to be improved
+
+cor_res <- rep(NA, k)
+
+for(l in 1:k){
+
+  # prepare data
+  d_l <- d # copy the original data
+  d_res <- d
+
+  # mask validation set data
+  d_l$y[VS[, l]] <- NA
+
+  m <- kin.blup(data = d_l, geno = "GID", pheno = "y", K = K,
+                GAUSS = FALSE, fixed = "cross")
+  d_res$y_pred <- m$g
+
+  # keep only the validation data
+  d_res_vs <- d_res[VS[, l], ]
+
+  plot(x = d_res_vs$y_pred, y = d_res_vs$y)
+
+  cor_res[l] <- cor(x = d_res_vs$y_pred, y = d_res_vs$y)
+
+}
+
+```
 
 ## Simulation and utilisation of data for QTL detection 
+```{r QTL detection}
+# QTL detection usage ----
+
+geno_par <- geno_par[1:5, ]
+cross_scheme <- cross_scheme_NAM(np = 5)
+
+geno.sim <- sim_mpp_cross(geno_par = geno_par, map = map,
+                          cross_scheme = cross_scheme,
+                          n_ind_cr = rep(100, nrow(cross_scheme)))
+#génération pheno
+y_sim <- mc_sim_pheno(X = geno.sim$geno_num_IBD, map = map,
+                      type_effect = "equal", n_QTL = 10)
+pheno <- matrix(y_sim$d_y$y_sim, ncol = 1)
+rownames(pheno) <- rownames(y_sim$d_y)
+colnames(pheno) <- "trait"
+
+#gene géno off
+geno.off <- geno.sim$geno_chr_IBS
+
+#phéno data
+cross.ind <- substr(rownames(pheno), 1, 3)
+cross.ind <- strsplit(rownames(pheno), "_")
+cross.ind <- unlist(lapply(cross.ind, `[[`, 1))
+
+#par.per.cross
+par.per.cross <- as.matrix(cross_scheme)
+#map data
+data("EUNAM_map")
+rownames(map) <- map[, 1]
+
+#create a mppData object
+mppData <- create.mppData(geno.off = geno.off, geno.par = geno_par,
+                          map = map, pheno = pheno, cross.ind = cross.ind,
+                          par.per.cross = par.per.cross)
+#mk quality control
+mppData <- QC.mppData(mppData = mppData, n.lim = 15, MAF.pop.lim = 0.05,
+                      MAF.cr.miss = TRUE, mk.miss = 0.1,
+                      gen.miss = 0.25, verbose = TRUE)
+
+#IBS processing and IBD processing
+mppData <- IBS.mppData(mppData = mppData)
+mppData <- IBD.mppData(mppData = mppData, het.miss.par = TRUE, type = 'F',
+                       F.gen = 2,
+                       type.mating = 'selfing')
+
+
+#SIM
+QTL_sim <- mpp_SIM(mppData, Q.eff = "par")
+#QTL Sim
+QTL_pos <-as.matrix(y_sim$mk_sel_r[,2:3])
+plot(QTL_sim, QTL = QTL_pos )
+```
+

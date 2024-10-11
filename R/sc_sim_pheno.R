@@ -106,20 +106,24 @@
 #'
 #'
 #' @return list containing the following object
-#'
-#' 1. d_y: data.frame with: simulated phenotype (y_sim), featured causal variants contribution (y_f), residual causal variants contribution (y_r), error contribution (e_i)
-#' 2. mk_sel_f: selected featured causal variants
-#' (if dilution_percent != 0, Beta = 0 for noncausal variants)
-#' 3. mk_sel_r: selected residual causal variants
-#' 4. X_f: marker matrix of the featured causal variants
-#' (if dilution_percent != 0, marker matrix with also noncausal variants featured selected)
-#' 5. X_r: marker matrix of the residual causal variants
-#' 6. Xs_f: standardized marker matrix of the featured causal variants
-#' (if dilution_percent != 0, marker matrix with also noncausal variants featured selected)
-#' 7. Xs_r: standardized marker matrix of the residual causal variants
-#' 8. Bf: Additive effect of the featured causal variants
-#' 9. Br: Additive effect of the residual causal variants
-#'
+#' \enumerate{
+#' \item {d_y: data.frame with: simulated phenotype (y_sim), featured causal
+#' variants contribution (y_f), residual causal variants contribution (y_r),
+#' error contribution (e_i)}
+#' \item {mk_sel_f: selected featured causal variants
+#' (if dilution_percent != 0, Beta = 0 for noncausal variants)}
+#' \item {mk_sel_r: selected residual causal variants}
+#' \item {X_f: marker matrix of the featured causal variants
+#' (if dilution_percent != 0, marker matrix with also noncausal variants
+#' featured selected)}
+#' \item {X_r: marker matrix of the residual causal variants}
+#' \item {Xs_f: standardized marker matrix of the featured causal variants
+#' (if dilution_percent != 0, marker matrix with also noncausal variants
+#' featured selected)}
+#' \item {Xs_r: standardized marker matrix of the residual causal variants}
+#' \item {Bf: Additive effect of the featured causal variants}
+#' \item {Br: Additive effect of the residual causal variants}
+#' }
 #' @examples
 #'
 #' \dontrun{
